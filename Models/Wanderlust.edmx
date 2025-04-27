@@ -1,0 +1,1013 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="WanderlustModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AUTHOR">
+          <Key>
+            <PropertyRef Name="author_id" />
+          </Key>
+          <Property Name="author_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="firstName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="lastName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BLOG">
+          <Key>
+            <PropertyRef Name="blog_id" />
+          </Key>
+          <Property Name="blog_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="author_id" Type="int" Nullable="false" />
+          <Property Name="title" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="content" Type="text" Nullable="false" />
+          <Property Name="publication_date" Type="datetime" Nullable="false" />
+          <Property Name="likes" Type="int" />
+          <Property Name="dislikes" Type="int" />
+        </EntityType>
+        <EntityType Name="BOOKING">
+          <Key>
+            <PropertyRef Name="booking_id" />
+          </Key>
+          <Property Name="booking_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="bk_date" Type="date" Nullable="false" />
+          <Property Name="status" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="user_id" Type="int" Nullable="false" />
+          <Property Name="bk_type" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="trip_id" Type="int" Nullable="false" />
+          <Property Name="travel_start_date" Type="date" Nullable="false" />
+          <Property Name="travel_end_date" Type="date" Nullable="false" />
+          <Property Name="numtravelers" Type="int" Nullable="false" />
+          <Property Name="bk_cost" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+        </EntityType>
+        <EntityType Name="COMMENT">
+          <Key>
+            <PropertyRef Name="cmnt_id" />
+          </Key>
+          <Property Name="cmnt_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="blog_id" Type="int" Nullable="false" />
+          <Property Name="content" Type="text" Nullable="false" />
+          <Property Name="user_id" Type="int" Nullable="false" />
+          <Property Name="date_posted" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DESTINATION">
+          <Key>
+            <PropertyRef Name="dest_id" />
+          </Key>
+          <Property Name="dest_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="destName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="image" Type="varchar" MaxLength="255" />
+          <Property Name="price" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="description" Type="text" />
+        </EntityType>
+        <EntityType Name="ITINERARY">
+          <Key>
+            <PropertyRef Name="itinerary_id" />
+          </Key>
+          <Property Name="itinerary_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="user_id" Type="int" Nullable="false" />
+          <Property Name="price" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ITINERARY_DESTINATION">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="itinerary_id" Type="int" Nullable="false" />
+          <Property Name="dest_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PACKAGE">
+          <Key>
+            <PropertyRef Name="pkg_id" />
+          </Key>
+          <Property Name="pkg_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="image" Type="varchar" MaxLength="255" />
+          <Property Name="price" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="description" Type="text" />
+        </EntityType>
+        <EntityType Name="PACKAGE_DESTINATION">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="pkg_id" Type="int" Nullable="false" />
+          <Property Name="dest_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PAYMENT">
+          <Key>
+            <PropertyRef Name="payment_id" />
+          </Key>
+          <Property Name="payment_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="booking_id" Type="int" Nullable="false" />
+          <Property Name="payMethod" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="amount" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="payment_date" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="REVIEW">
+          <Key>
+            <PropertyRef Name="review_id" />
+          </Key>
+          <Property Name="review_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="dest_id" Type="int" Nullable="false" />
+          <Property Name="rating" Type="int" Nullable="false" />
+          <Property Name="content" Type="text" />
+          <Property Name="user_id" Type="int" Nullable="false" />
+          <Property Name="review_date" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="USER">
+          <Key>
+            <PropertyRef Name="userID" />
+          </Key>
+          <Property Name="userID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="firstName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="lastName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="ph_num" Type="varchar" MaxLength="20" />
+          <Property Name="addr" Type="varchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="WISHLIST">
+          <Key>
+            <PropertyRef Name="item_id" />
+          </Key>
+          <Property Name="item_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="dest_id" Type="int" Nullable="false" />
+          <Property Name="user_id" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_BLOG_AUTHOR">
+          <End Role="AUTHOR" Type="Self.AUTHOR" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="BLOG" Type="Self.BLOG" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AUTHOR">
+              <PropertyRef Name="author_id" />
+            </Principal>
+            <Dependent Role="BLOG">
+              <PropertyRef Name="author_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BOOKING_USER">
+          <End Role="USER" Type="Self.USER" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="BOOKING" Type="Self.BOOKING" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER">
+              <PropertyRef Name="userID" />
+            </Principal>
+            <Dependent Role="BOOKING">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_COMMENT_BLOG">
+          <End Role="BLOG" Type="Self.BLOG" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="COMMENT" Type="Self.COMMENT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BLOG">
+              <PropertyRef Name="blog_id" />
+            </Principal>
+            <Dependent Role="COMMENT">
+              <PropertyRef Name="blog_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_COMMENT_USER">
+          <End Role="USER" Type="Self.USER" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="COMMENT" Type="Self.COMMENT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER">
+              <PropertyRef Name="userID" />
+            </Principal>
+            <Dependent Role="COMMENT">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ITINERARY_DESTINATION_DESTINATION">
+          <End Role="DESTINATION" Type="Self.DESTINATION" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ITINERARY_DESTINATION" Type="Self.ITINERARY_DESTINATION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DESTINATION">
+              <PropertyRef Name="dest_id" />
+            </Principal>
+            <Dependent Role="ITINERARY_DESTINATION">
+              <PropertyRef Name="dest_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ITINERARY_DESTINATION_ITINERARY">
+          <End Role="ITINERARY" Type="Self.ITINERARY" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ITINERARY_DESTINATION" Type="Self.ITINERARY_DESTINATION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ITINERARY">
+              <PropertyRef Name="itinerary_id" />
+            </Principal>
+            <Dependent Role="ITINERARY_DESTINATION">
+              <PropertyRef Name="itinerary_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ITINERARY_USER">
+          <End Role="USER" Type="Self.USER" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ITINERARY" Type="Self.ITINERARY" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER">
+              <PropertyRef Name="userID" />
+            </Principal>
+            <Dependent Role="ITINERARY">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PACKAGE_DESTINATION_DESTINATION">
+          <End Role="DESTINATION" Type="Self.DESTINATION" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="PACKAGE_DESTINATION" Type="Self.PACKAGE_DESTINATION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DESTINATION">
+              <PropertyRef Name="dest_id" />
+            </Principal>
+            <Dependent Role="PACKAGE_DESTINATION">
+              <PropertyRef Name="dest_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PACKAGE_DESTINATION_PACKAGE">
+          <End Role="PACKAGE" Type="Self.PACKAGE" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="PACKAGE_DESTINATION" Type="Self.PACKAGE_DESTINATION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PACKAGE">
+              <PropertyRef Name="pkg_id" />
+            </Principal>
+            <Dependent Role="PACKAGE_DESTINATION">
+              <PropertyRef Name="pkg_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PAYMENT_BOOKING">
+          <End Role="BOOKING" Type="Self.BOOKING" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="PAYMENT" Type="Self.PAYMENT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BOOKING">
+              <PropertyRef Name="booking_id" />
+            </Principal>
+            <Dependent Role="PAYMENT">
+              <PropertyRef Name="booking_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_REVIEW_DESTINATION">
+          <End Role="DESTINATION" Type="Self.DESTINATION" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="REVIEW" Type="Self.REVIEW" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DESTINATION">
+              <PropertyRef Name="dest_id" />
+            </Principal>
+            <Dependent Role="REVIEW">
+              <PropertyRef Name="dest_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_REVIEW_USER">
+          <End Role="USER" Type="Self.USER" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="REVIEW" Type="Self.REVIEW" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER">
+              <PropertyRef Name="userID" />
+            </Principal>
+            <Dependent Role="REVIEW">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WISHLIST_DESTINATION">
+          <End Role="DESTINATION" Type="Self.DESTINATION" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="WISHLIST" Type="Self.WISHLIST" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DESTINATION">
+              <PropertyRef Name="dest_id" />
+            </Principal>
+            <Dependent Role="WISHLIST">
+              <PropertyRef Name="dest_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WISHLIST_USER">
+          <End Role="USER" Type="Self.USER" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="WISHLIST" Type="Self.WISHLIST" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER">
+              <PropertyRef Name="userID" />
+            </Principal>
+            <Dependent Role="WISHLIST">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="WanderlustModelStoreContainer">
+          <EntitySet Name="AUTHOR" EntityType="Self.AUTHOR" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BLOG" EntityType="Self.BLOG" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BOOKING" EntityType="Self.BOOKING" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="COMMENT" EntityType="Self.COMMENT" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DESTINATION" EntityType="Self.DESTINATION" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ITINERARY" EntityType="Self.ITINERARY" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ITINERARY_DESTINATION" EntityType="Self.ITINERARY_DESTINATION" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PACKAGE" EntityType="Self.PACKAGE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PACKAGE_DESTINATION" EntityType="Self.PACKAGE_DESTINATION" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PAYMENT" EntityType="Self.PAYMENT" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="REVIEW" EntityType="Self.REVIEW" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="USER" EntityType="Self.USER" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WISHLIST" EntityType="Self.WISHLIST" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_BLOG_AUTHOR" Association="Self.FK_BLOG_AUTHOR">
+            <End Role="AUTHOR" EntitySet="AUTHOR" />
+            <End Role="BLOG" EntitySet="BLOG" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BOOKING_USER" Association="Self.FK_BOOKING_USER">
+            <End Role="USER" EntitySet="USER" />
+            <End Role="BOOKING" EntitySet="BOOKING" />
+          </AssociationSet>
+          <AssociationSet Name="FK_COMMENT_BLOG" Association="Self.FK_COMMENT_BLOG">
+            <End Role="BLOG" EntitySet="BLOG" />
+            <End Role="COMMENT" EntitySet="COMMENT" />
+          </AssociationSet>
+          <AssociationSet Name="FK_COMMENT_USER" Association="Self.FK_COMMENT_USER">
+            <End Role="USER" EntitySet="USER" />
+            <End Role="COMMENT" EntitySet="COMMENT" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ITINERARY_DESTINATION_DESTINATION" Association="Self.FK_ITINERARY_DESTINATION_DESTINATION">
+            <End Role="DESTINATION" EntitySet="DESTINATION" />
+            <End Role="ITINERARY_DESTINATION" EntitySet="ITINERARY_DESTINATION" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ITINERARY_DESTINATION_ITINERARY" Association="Self.FK_ITINERARY_DESTINATION_ITINERARY">
+            <End Role="ITINERARY" EntitySet="ITINERARY" />
+            <End Role="ITINERARY_DESTINATION" EntitySet="ITINERARY_DESTINATION" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ITINERARY_USER" Association="Self.FK_ITINERARY_USER">
+            <End Role="USER" EntitySet="USER" />
+            <End Role="ITINERARY" EntitySet="ITINERARY" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PACKAGE_DESTINATION_DESTINATION" Association="Self.FK_PACKAGE_DESTINATION_DESTINATION">
+            <End Role="DESTINATION" EntitySet="DESTINATION" />
+            <End Role="PACKAGE_DESTINATION" EntitySet="PACKAGE_DESTINATION" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PACKAGE_DESTINATION_PACKAGE" Association="Self.FK_PACKAGE_DESTINATION_PACKAGE">
+            <End Role="PACKAGE" EntitySet="PACKAGE" />
+            <End Role="PACKAGE_DESTINATION" EntitySet="PACKAGE_DESTINATION" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PAYMENT_BOOKING" Association="Self.FK_PAYMENT_BOOKING">
+            <End Role="BOOKING" EntitySet="BOOKING" />
+            <End Role="PAYMENT" EntitySet="PAYMENT" />
+          </AssociationSet>
+          <AssociationSet Name="FK_REVIEW_DESTINATION" Association="Self.FK_REVIEW_DESTINATION">
+            <End Role="DESTINATION" EntitySet="DESTINATION" />
+            <End Role="REVIEW" EntitySet="REVIEW" />
+          </AssociationSet>
+          <AssociationSet Name="FK_REVIEW_USER" Association="Self.FK_REVIEW_USER">
+            <End Role="USER" EntitySet="USER" />
+            <End Role="REVIEW" EntitySet="REVIEW" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WISHLIST_DESTINATION" Association="Self.FK_WISHLIST_DESTINATION">
+            <End Role="DESTINATION" EntitySet="DESTINATION" />
+            <End Role="WISHLIST" EntitySet="WISHLIST" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WISHLIST_USER" Association="Self.FK_WISHLIST_USER">
+            <End Role="USER" EntitySet="USER" />
+            <End Role="WISHLIST" EntitySet="WISHLIST" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="WanderlustModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="AUTHOR">
+          <Key>
+            <PropertyRef Name="author_id" />
+          </Key>
+          <Property Name="author_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="firstName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="lastName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="BLOGs" Relationship="Self.FK_BLOG_AUTHOR" FromRole="AUTHOR" ToRole="BLOG" />
+        </EntityType>
+        <EntityType Name="BLOG">
+          <Key>
+            <PropertyRef Name="blog_id" />
+          </Key>
+          <Property Name="blog_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="author_id" Type="Int32" Nullable="false" />
+          <Property Name="title" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="content" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="publication_date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="likes" Type="Int32" />
+          <Property Name="dislikes" Type="Int32" />
+          <NavigationProperty Name="AUTHOR" Relationship="Self.FK_BLOG_AUTHOR" FromRole="BLOG" ToRole="AUTHOR" />
+          <NavigationProperty Name="COMMENTs" Relationship="Self.FK_COMMENT_BLOG" FromRole="BLOG" ToRole="COMMENT" />
+        </EntityType>
+        <EntityType Name="BOOKING">
+          <Key>
+            <PropertyRef Name="booking_id" />
+          </Key>
+          <Property Name="booking_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="bk_date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="status" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="user_id" Type="Int32" Nullable="false" />
+          <Property Name="bk_type" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="trip_id" Type="Int32" Nullable="false" />
+          <Property Name="travel_start_date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="travel_end_date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="numtravelers" Type="Int32" Nullable="false" />
+          <Property Name="bk_cost" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+          <NavigationProperty Name="USER" Relationship="Self.FK_BOOKING_USER" FromRole="BOOKING" ToRole="USER" />
+          <NavigationProperty Name="PAYMENTs" Relationship="Self.FK_PAYMENT_BOOKING" FromRole="BOOKING" ToRole="PAYMENT" />
+        </EntityType>
+        <EntityType Name="COMMENT">
+          <Key>
+            <PropertyRef Name="cmnt_id" />
+          </Key>
+          <Property Name="cmnt_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="blog_id" Type="Int32" Nullable="false" />
+          <Property Name="content" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="user_id" Type="Int32" Nullable="false" />
+          <Property Name="date_posted" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="BLOG" Relationship="Self.FK_COMMENT_BLOG" FromRole="COMMENT" ToRole="BLOG" />
+          <NavigationProperty Name="USER" Relationship="Self.FK_COMMENT_USER" FromRole="COMMENT" ToRole="USER" />
+        </EntityType>
+        <EntityType Name="DESTINATION">
+          <Key>
+            <PropertyRef Name="dest_id" />
+          </Key>
+          <Property Name="dest_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="destName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="image" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="price" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ITINERARY_DESTINATION" Relationship="Self.FK_ITINERARY_DESTINATION_DESTINATION" FromRole="DESTINATION" ToRole="ITINERARY_DESTINATION" />
+          <NavigationProperty Name="PACKAGE_DESTINATION" Relationship="Self.FK_PACKAGE_DESTINATION_DESTINATION" FromRole="DESTINATION" ToRole="PACKAGE_DESTINATION" />
+          <NavigationProperty Name="REVIEWs" Relationship="Self.FK_REVIEW_DESTINATION" FromRole="DESTINATION" ToRole="REVIEW" />
+          <NavigationProperty Name="WISHLISTs" Relationship="Self.FK_WISHLIST_DESTINATION" FromRole="DESTINATION" ToRole="WISHLIST" />
+        </EntityType>
+        <EntityType Name="ITINERARY">
+          <Key>
+            <PropertyRef Name="itinerary_id" />
+          </Key>
+          <Property Name="itinerary_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="user_id" Type="Int32" Nullable="false" />
+          <Property Name="price" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+          <NavigationProperty Name="ITINERARY_DESTINATION" Relationship="Self.FK_ITINERARY_DESTINATION_ITINERARY" FromRole="ITINERARY" ToRole="ITINERARY_DESTINATION" />
+          <NavigationProperty Name="USER" Relationship="Self.FK_ITINERARY_USER" FromRole="ITINERARY" ToRole="USER" />
+        </EntityType>
+        <EntityType Name="ITINERARY_DESTINATION">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="itinerary_id" Type="Int32" Nullable="false" />
+          <Property Name="dest_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="DESTINATION" Relationship="Self.FK_ITINERARY_DESTINATION_DESTINATION" FromRole="ITINERARY_DESTINATION" ToRole="DESTINATION" />
+          <NavigationProperty Name="ITINERARY" Relationship="Self.FK_ITINERARY_DESTINATION_ITINERARY" FromRole="ITINERARY_DESTINATION" ToRole="ITINERARY" />
+        </EntityType>
+        <EntityType Name="PACKAGE">
+          <Key>
+            <PropertyRef Name="pkg_id" />
+          </Key>
+          <Property Name="pkg_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="image" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="price" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="PACKAGE_DESTINATION" Relationship="Self.FK_PACKAGE_DESTINATION_PACKAGE" FromRole="PACKAGE" ToRole="PACKAGE_DESTINATION" />
+        </EntityType>
+        <EntityType Name="PACKAGE_DESTINATION">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="pkg_id" Type="Int32" Nullable="false" />
+          <Property Name="dest_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="DESTINATION" Relationship="Self.FK_PACKAGE_DESTINATION_DESTINATION" FromRole="PACKAGE_DESTINATION" ToRole="DESTINATION" />
+          <NavigationProperty Name="PACKAGE" Relationship="Self.FK_PACKAGE_DESTINATION_PACKAGE" FromRole="PACKAGE_DESTINATION" ToRole="PACKAGE" />
+        </EntityType>
+        <EntityType Name="PAYMENT">
+          <Key>
+            <PropertyRef Name="payment_id" />
+          </Key>
+          <Property Name="payment_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="booking_id" Type="Int32" Nullable="false" />
+          <Property Name="payMethod" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="amount" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="payment_date" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="BOOKING" Relationship="Self.FK_PAYMENT_BOOKING" FromRole="PAYMENT" ToRole="BOOKING" />
+        </EntityType>
+        <EntityType Name="REVIEW">
+          <Key>
+            <PropertyRef Name="review_id" />
+          </Key>
+          <Property Name="review_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="dest_id" Type="Int32" Nullable="false" />
+          <Property Name="rating" Type="Int32" Nullable="false" />
+          <Property Name="content" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="user_id" Type="Int32" Nullable="false" />
+          <Property Name="review_date" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="DESTINATION" Relationship="Self.FK_REVIEW_DESTINATION" FromRole="REVIEW" ToRole="DESTINATION" />
+          <NavigationProperty Name="USER" Relationship="Self.FK_REVIEW_USER" FromRole="REVIEW" ToRole="USER" />
+        </EntityType>
+        <EntityType Name="USER">
+          <Key>
+            <PropertyRef Name="userID" />
+          </Key>
+          <Property Name="userID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="email" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="firstName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="lastName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ph_num" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="addr" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="BOOKINGs" Relationship="Self.FK_BOOKING_USER" FromRole="USER" ToRole="BOOKING" />
+          <NavigationProperty Name="COMMENTs" Relationship="Self.FK_COMMENT_USER" FromRole="USER" ToRole="COMMENT" />
+          <NavigationProperty Name="ITINERARies" Relationship="Self.FK_ITINERARY_USER" FromRole="USER" ToRole="ITINERARY" />
+          <NavigationProperty Name="REVIEWs" Relationship="Self.FK_REVIEW_USER" FromRole="USER" ToRole="REVIEW" />
+          <NavigationProperty Name="WISHLISTs" Relationship="Self.FK_WISHLIST_USER" FromRole="USER" ToRole="WISHLIST" />
+        </EntityType>
+        <EntityType Name="WISHLIST">
+          <Key>
+            <PropertyRef Name="item_id" />
+          </Key>
+          <Property Name="item_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="dest_id" Type="Int32" Nullable="false" />
+          <Property Name="user_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="DESTINATION" Relationship="Self.FK_WISHLIST_DESTINATION" FromRole="WISHLIST" ToRole="DESTINATION" />
+          <NavigationProperty Name="USER" Relationship="Self.FK_WISHLIST_USER" FromRole="WISHLIST" ToRole="USER" />
+        </EntityType>
+        <Association Name="FK_BLOG_AUTHOR">
+          <End Role="AUTHOR" Type="Self.AUTHOR" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="BLOG" Type="Self.BLOG" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AUTHOR">
+              <PropertyRef Name="author_id" />
+            </Principal>
+            <Dependent Role="BLOG">
+              <PropertyRef Name="author_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_COMMENT_BLOG">
+          <End Role="BLOG" Type="Self.BLOG" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="COMMENT" Type="Self.COMMENT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BLOG">
+              <PropertyRef Name="blog_id" />
+            </Principal>
+            <Dependent Role="COMMENT">
+              <PropertyRef Name="blog_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BOOKING_USER">
+          <End Role="USER" Type="Self.USER" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="BOOKING" Type="Self.BOOKING" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER">
+              <PropertyRef Name="userID" />
+            </Principal>
+            <Dependent Role="BOOKING">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PAYMENT_BOOKING">
+          <End Role="BOOKING" Type="Self.BOOKING" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="PAYMENT" Type="Self.PAYMENT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BOOKING">
+              <PropertyRef Name="booking_id" />
+            </Principal>
+            <Dependent Role="PAYMENT">
+              <PropertyRef Name="booking_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_COMMENT_USER">
+          <End Role="USER" Type="Self.USER" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="COMMENT" Type="Self.COMMENT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER">
+              <PropertyRef Name="userID" />
+            </Principal>
+            <Dependent Role="COMMENT">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ITINERARY_DESTINATION_DESTINATION">
+          <End Role="DESTINATION" Type="Self.DESTINATION" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ITINERARY_DESTINATION" Type="Self.ITINERARY_DESTINATION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DESTINATION">
+              <PropertyRef Name="dest_id" />
+            </Principal>
+            <Dependent Role="ITINERARY_DESTINATION">
+              <PropertyRef Name="dest_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PACKAGE_DESTINATION_DESTINATION">
+          <End Role="DESTINATION" Type="Self.DESTINATION" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="PACKAGE_DESTINATION" Type="Self.PACKAGE_DESTINATION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DESTINATION">
+              <PropertyRef Name="dest_id" />
+            </Principal>
+            <Dependent Role="PACKAGE_DESTINATION">
+              <PropertyRef Name="dest_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_REVIEW_DESTINATION">
+          <End Role="DESTINATION" Type="Self.DESTINATION" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="REVIEW" Type="Self.REVIEW" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DESTINATION">
+              <PropertyRef Name="dest_id" />
+            </Principal>
+            <Dependent Role="REVIEW">
+              <PropertyRef Name="dest_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WISHLIST_DESTINATION">
+          <End Role="DESTINATION" Type="Self.DESTINATION" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="WISHLIST" Type="Self.WISHLIST" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DESTINATION">
+              <PropertyRef Name="dest_id" />
+            </Principal>
+            <Dependent Role="WISHLIST">
+              <PropertyRef Name="dest_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ITINERARY_DESTINATION_ITINERARY">
+          <End Role="ITINERARY" Type="Self.ITINERARY" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ITINERARY_DESTINATION" Type="Self.ITINERARY_DESTINATION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ITINERARY">
+              <PropertyRef Name="itinerary_id" />
+            </Principal>
+            <Dependent Role="ITINERARY_DESTINATION">
+              <PropertyRef Name="itinerary_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ITINERARY_USER">
+          <End Role="USER" Type="Self.USER" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ITINERARY" Type="Self.ITINERARY" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER">
+              <PropertyRef Name="userID" />
+            </Principal>
+            <Dependent Role="ITINERARY">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PACKAGE_DESTINATION_PACKAGE">
+          <End Role="PACKAGE" Type="Self.PACKAGE" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="PACKAGE_DESTINATION" Type="Self.PACKAGE_DESTINATION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PACKAGE">
+              <PropertyRef Name="pkg_id" />
+            </Principal>
+            <Dependent Role="PACKAGE_DESTINATION">
+              <PropertyRef Name="pkg_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_REVIEW_USER">
+          <End Role="USER" Type="Self.USER" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="REVIEW" Type="Self.REVIEW" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER">
+              <PropertyRef Name="userID" />
+            </Principal>
+            <Dependent Role="REVIEW">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WISHLIST_USER">
+          <End Role="USER" Type="Self.USER" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="WISHLIST" Type="Self.WISHLIST" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER">
+              <PropertyRef Name="userID" />
+            </Principal>
+            <Dependent Role="WISHLIST">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="WanderlustEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AUTHORs" EntityType="Self.AUTHOR" />
+          <EntitySet Name="BLOGs" EntityType="Self.BLOG" />
+          <EntitySet Name="BOOKINGs" EntityType="Self.BOOKING" />
+          <EntitySet Name="COMMENTs" EntityType="Self.COMMENT" />
+          <EntitySet Name="DESTINATIONs" EntityType="Self.DESTINATION" />
+          <EntitySet Name="ITINERARies" EntityType="Self.ITINERARY" />
+          <EntitySet Name="ITINERARY_DESTINATION" EntityType="Self.ITINERARY_DESTINATION" />
+          <EntitySet Name="PACKAGEs" EntityType="Self.PACKAGE" />
+          <EntitySet Name="PACKAGE_DESTINATION" EntityType="Self.PACKAGE_DESTINATION" />
+          <EntitySet Name="PAYMENTs" EntityType="Self.PAYMENT" />
+          <EntitySet Name="REVIEWs" EntityType="Self.REVIEW" />
+          <EntitySet Name="USERs" EntityType="Self.USER" />
+          <EntitySet Name="WISHLISTs" EntityType="Self.WISHLIST" />
+          <AssociationSet Name="FK_BLOG_AUTHOR" Association="Self.FK_BLOG_AUTHOR">
+            <End Role="AUTHOR" EntitySet="AUTHORs" />
+            <End Role="BLOG" EntitySet="BLOGs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_COMMENT_BLOG" Association="Self.FK_COMMENT_BLOG">
+            <End Role="BLOG" EntitySet="BLOGs" />
+            <End Role="COMMENT" EntitySet="COMMENTs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BOOKING_USER" Association="Self.FK_BOOKING_USER">
+            <End Role="USER" EntitySet="USERs" />
+            <End Role="BOOKING" EntitySet="BOOKINGs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PAYMENT_BOOKING" Association="Self.FK_PAYMENT_BOOKING">
+            <End Role="BOOKING" EntitySet="BOOKINGs" />
+            <End Role="PAYMENT" EntitySet="PAYMENTs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_COMMENT_USER" Association="Self.FK_COMMENT_USER">
+            <End Role="USER" EntitySet="USERs" />
+            <End Role="COMMENT" EntitySet="COMMENTs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ITINERARY_DESTINATION_DESTINATION" Association="Self.FK_ITINERARY_DESTINATION_DESTINATION">
+            <End Role="DESTINATION" EntitySet="DESTINATIONs" />
+            <End Role="ITINERARY_DESTINATION" EntitySet="ITINERARY_DESTINATION" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PACKAGE_DESTINATION_DESTINATION" Association="Self.FK_PACKAGE_DESTINATION_DESTINATION">
+            <End Role="DESTINATION" EntitySet="DESTINATIONs" />
+            <End Role="PACKAGE_DESTINATION" EntitySet="PACKAGE_DESTINATION" />
+          </AssociationSet>
+          <AssociationSet Name="FK_REVIEW_DESTINATION" Association="Self.FK_REVIEW_DESTINATION">
+            <End Role="DESTINATION" EntitySet="DESTINATIONs" />
+            <End Role="REVIEW" EntitySet="REVIEWs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WISHLIST_DESTINATION" Association="Self.FK_WISHLIST_DESTINATION">
+            <End Role="DESTINATION" EntitySet="DESTINATIONs" />
+            <End Role="WISHLIST" EntitySet="WISHLISTs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ITINERARY_DESTINATION_ITINERARY" Association="Self.FK_ITINERARY_DESTINATION_ITINERARY">
+            <End Role="ITINERARY" EntitySet="ITINERARies" />
+            <End Role="ITINERARY_DESTINATION" EntitySet="ITINERARY_DESTINATION" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ITINERARY_USER" Association="Self.FK_ITINERARY_USER">
+            <End Role="USER" EntitySet="USERs" />
+            <End Role="ITINERARY" EntitySet="ITINERARies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PACKAGE_DESTINATION_PACKAGE" Association="Self.FK_PACKAGE_DESTINATION_PACKAGE">
+            <End Role="PACKAGE" EntitySet="PACKAGEs" />
+            <End Role="PACKAGE_DESTINATION" EntitySet="PACKAGE_DESTINATION" />
+          </AssociationSet>
+          <AssociationSet Name="FK_REVIEW_USER" Association="Self.FK_REVIEW_USER">
+            <End Role="USER" EntitySet="USERs" />
+            <End Role="REVIEW" EntitySet="REVIEWs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WISHLIST_USER" Association="Self.FK_WISHLIST_USER">
+            <End Role="USER" EntitySet="USERs" />
+            <End Role="WISHLIST" EntitySet="WISHLISTs" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="WanderlustModelStoreContainer" CdmEntityContainer="WanderlustEntities">
+          <EntitySetMapping Name="AUTHORs">
+            <EntityTypeMapping TypeName="WanderlustModel.AUTHOR">
+              <MappingFragment StoreEntitySet="AUTHOR">
+                <ScalarProperty Name="author_id" ColumnName="author_id" />
+                <ScalarProperty Name="firstName" ColumnName="firstName" />
+                <ScalarProperty Name="lastName" ColumnName="lastName" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="password" ColumnName="password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BLOGs">
+            <EntityTypeMapping TypeName="WanderlustModel.BLOG">
+              <MappingFragment StoreEntitySet="BLOG">
+                <ScalarProperty Name="blog_id" ColumnName="blog_id" />
+                <ScalarProperty Name="author_id" ColumnName="author_id" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="content" ColumnName="content" />
+                <ScalarProperty Name="publication_date" ColumnName="publication_date" />
+                <ScalarProperty Name="likes" ColumnName="likes" />
+                <ScalarProperty Name="dislikes" ColumnName="dislikes" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BOOKINGs">
+            <EntityTypeMapping TypeName="WanderlustModel.BOOKING">
+              <MappingFragment StoreEntitySet="BOOKING">
+                <ScalarProperty Name="booking_id" ColumnName="booking_id" />
+                <ScalarProperty Name="bk_date" ColumnName="bk_date" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="bk_type" ColumnName="bk_type" />
+                <ScalarProperty Name="trip_id" ColumnName="trip_id" />
+                <ScalarProperty Name="travel_start_date" ColumnName="travel_start_date" />
+                <ScalarProperty Name="travel_end_date" ColumnName="travel_end_date" />
+                <ScalarProperty Name="numtravelers" ColumnName="numtravelers" />
+                <ScalarProperty Name="bk_cost" ColumnName="bk_cost" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="COMMENTs">
+            <EntityTypeMapping TypeName="WanderlustModel.COMMENT">
+              <MappingFragment StoreEntitySet="COMMENT">
+                <ScalarProperty Name="cmnt_id" ColumnName="cmnt_id" />
+                <ScalarProperty Name="blog_id" ColumnName="blog_id" />
+                <ScalarProperty Name="content" ColumnName="content" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="date_posted" ColumnName="date_posted" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DESTINATIONs">
+            <EntityTypeMapping TypeName="WanderlustModel.DESTINATION">
+              <MappingFragment StoreEntitySet="DESTINATION">
+                <ScalarProperty Name="dest_id" ColumnName="dest_id" />
+                <ScalarProperty Name="destName" ColumnName="destName" />
+                <ScalarProperty Name="image" ColumnName="image" />
+                <ScalarProperty Name="price" ColumnName="price" />
+                <ScalarProperty Name="description" ColumnName="description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ITINERARies">
+            <EntityTypeMapping TypeName="WanderlustModel.ITINERARY">
+              <MappingFragment StoreEntitySet="ITINERARY">
+                <ScalarProperty Name="itinerary_id" ColumnName="itinerary_id" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="price" ColumnName="price" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ITINERARY_DESTINATION">
+            <EntityTypeMapping TypeName="WanderlustModel.ITINERARY_DESTINATION">
+              <MappingFragment StoreEntitySet="ITINERARY_DESTINATION">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="itinerary_id" ColumnName="itinerary_id" />
+                <ScalarProperty Name="dest_id" ColumnName="dest_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PACKAGEs">
+            <EntityTypeMapping TypeName="WanderlustModel.PACKAGE">
+              <MappingFragment StoreEntitySet="PACKAGE">
+                <ScalarProperty Name="pkg_id" ColumnName="pkg_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="image" ColumnName="image" />
+                <ScalarProperty Name="price" ColumnName="price" />
+                <ScalarProperty Name="description" ColumnName="description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PACKAGE_DESTINATION">
+            <EntityTypeMapping TypeName="WanderlustModel.PACKAGE_DESTINATION">
+              <MappingFragment StoreEntitySet="PACKAGE_DESTINATION">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="pkg_id" ColumnName="pkg_id" />
+                <ScalarProperty Name="dest_id" ColumnName="dest_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PAYMENTs">
+            <EntityTypeMapping TypeName="WanderlustModel.PAYMENT">
+              <MappingFragment StoreEntitySet="PAYMENT">
+                <ScalarProperty Name="payment_id" ColumnName="payment_id" />
+                <ScalarProperty Name="booking_id" ColumnName="booking_id" />
+                <ScalarProperty Name="payMethod" ColumnName="payMethod" />
+                <ScalarProperty Name="amount" ColumnName="amount" />
+                <ScalarProperty Name="payment_date" ColumnName="payment_date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="REVIEWs">
+            <EntityTypeMapping TypeName="WanderlustModel.REVIEW">
+              <MappingFragment StoreEntitySet="REVIEW">
+                <ScalarProperty Name="review_id" ColumnName="review_id" />
+                <ScalarProperty Name="dest_id" ColumnName="dest_id" />
+                <ScalarProperty Name="rating" ColumnName="rating" />
+                <ScalarProperty Name="content" ColumnName="content" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="review_date" ColumnName="review_date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="USERs">
+            <EntityTypeMapping TypeName="WanderlustModel.USER">
+              <MappingFragment StoreEntitySet="USER">
+                <ScalarProperty Name="userID" ColumnName="userID" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="firstName" ColumnName="firstName" />
+                <ScalarProperty Name="lastName" ColumnName="lastName" />
+                <ScalarProperty Name="ph_num" ColumnName="ph_num" />
+                <ScalarProperty Name="addr" ColumnName="addr" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WISHLISTs">
+            <EntityTypeMapping TypeName="WanderlustModel.WISHLIST">
+              <MappingFragment StoreEntitySet="WISHLIST">
+                <ScalarProperty Name="item_id" ColumnName="item_id" />
+                <ScalarProperty Name="dest_id" ColumnName="dest_id" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="536631f1db024c9b8876df7007b171fa" Name="Diagram1">
+        <EntityTypeShape EntityType="WanderlustModel.AUTHOR" Width="1.5" PointX="1.5" PointY="19" IsExpanded="true" />
+        <EntityTypeShape EntityType="WanderlustModel.BLOG" Width="1.5" PointX="3.75" PointY="18.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WanderlustModel.BOOKING" Width="1.5" PointX="3" PointY="8.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="WanderlustModel.COMMENT" Width="1.5" PointX="6" PointY="12" IsExpanded="true" />
+        <EntityTypeShape EntityType="WanderlustModel.DESTINATION" Width="1.5" PointX="3.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WanderlustModel.ITINERARY" Width="1.5" PointX="3" PointY="15.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="WanderlustModel.ITINERARY_DESTINATION" Width="1.5" PointX="5.25" PointY="15.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="WanderlustModel.PACKAGE" Width="1.5" PointX="3.75" PointY="23" IsExpanded="true" />
+        <EntityTypeShape EntityType="WanderlustModel.PACKAGE_DESTINATION" Width="1.5" PointX="6" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="WanderlustModel.PAYMENT" Width="1.5" PointX="5.25" PointY="8.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="WanderlustModel.REVIEW" Width="1.5" PointX="6" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="WanderlustModel.USER" Width="1.5" PointX="0.75" PointY="9.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="WanderlustModel.WISHLIST" Width="1.5" PointX="3" PointY="5.125" IsExpanded="true" />
+        <AssociationConnector Association="WanderlustModel.FK_BLOG_AUTHOR" ManuallyRouted="false" />
+        <AssociationConnector Association="WanderlustModel.FK_COMMENT_BLOG" ManuallyRouted="false" />
+        <AssociationConnector Association="WanderlustModel.FK_BOOKING_USER" ManuallyRouted="false" />
+        <AssociationConnector Association="WanderlustModel.FK_PAYMENT_BOOKING" ManuallyRouted="false" />
+        <AssociationConnector Association="WanderlustModel.FK_COMMENT_USER" ManuallyRouted="false" />
+        <AssociationConnector Association="WanderlustModel.FK_ITINERARY_DESTINATION_DESTINATION" ManuallyRouted="false" />
+        <AssociationConnector Association="WanderlustModel.FK_PACKAGE_DESTINATION_DESTINATION" ManuallyRouted="false" />
+        <AssociationConnector Association="WanderlustModel.FK_REVIEW_DESTINATION" ManuallyRouted="false" />
+        <AssociationConnector Association="WanderlustModel.FK_WISHLIST_DESTINATION" ManuallyRouted="false" />
+        <AssociationConnector Association="WanderlustModel.FK_ITINERARY_DESTINATION_ITINERARY" ManuallyRouted="false" />
+        <AssociationConnector Association="WanderlustModel.FK_ITINERARY_USER" ManuallyRouted="false" />
+        <AssociationConnector Association="WanderlustModel.FK_PACKAGE_DESTINATION_PACKAGE" ManuallyRouted="false" />
+        <AssociationConnector Association="WanderlustModel.FK_REVIEW_USER" ManuallyRouted="false" />
+        <AssociationConnector Association="WanderlustModel.FK_WISHLIST_USER" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

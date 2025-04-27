@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35919.96 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wanderlust", "Wanderlust.csproj", "{4A05F551-748C-4204-8EEB-E21723F51ECB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4A05F551-748C-4204-8EEB-E21723F51ECB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A05F551-748C-4204-8EEB-E21723F51ECB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A05F551-748C-4204-8EEB-E21723F51ECB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A05F551-748C-4204-8EEB-E21723F51ECB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A9E9F365-22E3-4978-9809-1554108828BF}
+	EndGlobalSection
+EndGlobal
