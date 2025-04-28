@@ -10,6 +10,7 @@
         body {
             background-color: #fff8f0;
             font-family: 'Segoe UI', sans-serif;
+            padding-top: 70px;
         }
 
         .navbar {
@@ -26,10 +27,25 @@
             border: none;
         }
 
-            .btn-autumn:hover {
-                background-color: #ff7f50;
-                color: white;
-            }
+        .card:hover {
+            transform: scale(1.02);
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-autumn:hover {
+            background-color: #ff7f50;
+            color: white;
+        }
+
+        .no-navbar-spacing {
+            margin-top: -70px; /* Counteracts the body padding */
+        }
+
+        /* Add more space before footer */
+        .footer-spacing {
+            margin-bottom: 50px;
+        }
     </style>
 </head>
 <body>
@@ -67,7 +83,8 @@
         </div>
     </footer>
 
-    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script src="~/Scripts/bootstrap.bundle.min.js"></script>
     @RenderSection("scripts", required: false)
 </body>

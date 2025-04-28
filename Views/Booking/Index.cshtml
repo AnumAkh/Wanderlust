@@ -1,0 +1,17 @@
+﻿@model IEnumerable<Wanderlust.Models.BOOKING>
+
+@{
+    ViewBag.Title = "Your Bookings";
+}
+
+<h2>Your Bookings</h2>
+
+@foreach (var booking in Model)
+{
+    <div class="booking-item">
+        <h3>@booking.bk_type - @booking.bk_date.ToString("MM/dd/yyyy")</h3>
+        <p>Status: @booking.status</p>
+        <p>Cost: @booking.bk_cost</p>
+        <p><a href="@Url.Action("Details", "Booking", new { id = booking.booking_id })">View Details</a></p>
+    </div>
+}

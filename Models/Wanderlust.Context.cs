@@ -32,7 +32,7 @@ namespace Wanderlust.Models
         public virtual DbSet<DESTINATION> DESTINATIONs { get; set; }
         public virtual DbSet<ITINERARY> ITINERARies { get; set; }
         public virtual DbSet<ITINERARY_DESTINATION> ITINERARY_DESTINATION { get; set; }
-        public virtual DbSet<PACKAGE> PACKAGEs { get; set; }
+        public virtual DbSet<PACKAGE> Packages { get; set; }
         public virtual DbSet<PACKAGE_DESTINATION> PACKAGE_DESTINATION { get; set; }
         public virtual DbSet<PAYMENT> PAYMENTs { get; set; }
         public virtual DbSet<REVIEW> REVIEWs { get; set; }

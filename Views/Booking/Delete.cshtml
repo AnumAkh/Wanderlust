@@ -1,0 +1,97 @@
+﻿@model Wanderlust.Models.BOOKING
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>BOOKING</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.bk_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.bk_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.status)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.status)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.bk_type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.bk_type)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.trip_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.trip_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.travel_start_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.travel_start_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.travel_end_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.travel_end_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.numtravelers)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.numtravelers)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.bk_cost)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.bk_cost)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.USER.email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.USER.email)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

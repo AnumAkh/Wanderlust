@@ -1,0 +1,332 @@
+﻿@model Wanderlust.ViewModel.PackageDetailsViewModel
+@{
+    ViewBag.Title = "Package Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Hero Section with Package Image -->
+<div class="container-fluid p-0 mb-5 no-navbar-spacing">
+    <div class="position-relative">
+        <img src="@Url.Content("~/"+Model.Package.image)" alt="@Model.Package.name" class="img-fluid w-100" style="height: 500px; object-fit: cover;">
+        <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.7))"></div>
+        <div class="container position-absolute bottom-0 start-50 translate-middle-x text-white p-4">
+            <h1 class="display-4 fw-bold">@Model.Package.name</h1>
+            <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+                <span class="badge bg-warning text-dark fs-6">$@Model.Package.price per person</span>
+                <span><i class="bi bi-geo-alt-fill"></i> @Model.Destinations.Count destinations</span>
+                <span><i class="bi bi-calendar3"></i> 7 days adventure</span>
+                <span><i class="bi bi-star-fill text-warning"></i> 4.8/5 (124 reviews)</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row">
+        <!-- Main Content Column -->
+        <div class="col-lg-8">
+            <!-- Package Description Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h3 class="card-title mb-3">Overview</h3>
+                    <p class="card-text">@Model.Package.description</p>
+                    
+                    <div class="alert alert-warning mt-4">
+                        <div class="d-flex">
+                            <div class="me-3">
+                                <i class="bi bi-lightbulb-fill fs-3 text-warning"></i>
+                            </div>
+                            <div>
+                                <h5>Travel Tip</h5>
+                                <p class="mb-0">Book early to secure your spot! This package is highly popular and tends to sell out quickly during peak season.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Itinerary Section -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h3 class="card-title mb-4">Itinerary</h3>
+                    
+                    <div class="accordion" id="itineraryAccordion">
+                        <div class="accordion-item border mb-3 rounded">
+                            <h2 class="accordion-header" id="day1Heading">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#day1Collapse" aria-expanded="true" aria-controls="day1Collapse">
+                                    <span class="fw-bold">Day 1:</span> <span class="ms-2">Arrival and Welcome Dinner</span>
+                                </button>
+                            </h2>
+                            <div id="day1Collapse" class="accordion-collapse collapse show" aria-labelledby="day1Heading" data-bs-parent="#itineraryAccordion">
+                                <div class="accordion-body">
+                                    <p>Arrival at your destination and transfer to your hotel. Meet your guide and fellow travelers at a welcome dinner featuring local cuisine.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item border mb-3 rounded">
+                            <h2 class="accordion-header" id="day2Heading">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#day2Collapse" aria-expanded="false" aria-controls="day2Collapse">
+                                    <span class="fw-bold">Day 2:</span> <span class="ms-2">City Exploration</span>
+                                </button>
+                            </h2>
+                            <div id="day2Collapse" class="accordion-collapse collapse" aria-labelledby="day2Heading" data-bs-parent="#itineraryAccordion">
+                                <div class="accordion-body">
+                                    <p>Full day guided tour of the main city attractions. Visit historical sites and local markets. Afternoon at leisure to explore on your own.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item border mb-3 rounded">
+                            <h2 class="accordion-header" id="day3Heading">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#day3Collapse" aria-expanded="false" aria-controls="day3Collapse">
+                                    <span class="fw-bold">Day 3-6:</span> <span class="ms-2">Destination Exploration</span>
+                                </button>
+                            </h2>
+                            <div id="day3Collapse" class="accordion-collapse collapse" aria-labelledby="day3Heading" data-bs-parent="#itineraryAccordion">
+                                <div class="accordion-body">
+                                    <p>Visit the amazing destinations included in this package. Each day focuses on a different location, with guided tours, cultural experiences, and free time to enjoy the surroundings.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item border rounded">
+                            <h2 class="accordion-header" id="day7Heading">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#day7Collapse" aria-expanded="false" aria-controls="day7Collapse">
+                                    <span class="fw-bold">Day 7:</span> <span class="ms-2">Departure</span>
+                                </button>
+                            </h2>
+                            <div id="day7Collapse" class="accordion-collapse collapse" aria-labelledby="day7Heading" data-bs-parent="#itineraryAccordion">
+                                <div class="accordion-body">
+                                    <p>After breakfast, check out of your hotel and transfer to the airport for your departure flight.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Destinations Section -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h3 class="card-title mb-4">Featured Destinations</h3>
+                    
+                    <div class="row g-4">
+                        @foreach (var destination in Model.Destinations)
+                        {
+                            <div class="col-md-6">
+                                <div class="card h-100">
+                                    <img src="@Url.Content("~/"+destination.image)" class="card-img-top" alt="@destination.destName" style="height: 180px; object-fit: cover;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@destination.destName</h5>
+                                        <p class="card-text">@destination.description</p>
+                                    </div>
+                                    <div class="card-footer bg-white">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="badge bg-info">$@destination.price</span>
+                                            <a href="#" class="btn btn-sm btn-outline-primary">View Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sidebar Column -->
+        <div class="col-lg-4">
+            <!-- Booking Card -->
+            <div class="card shadow mb-4 position-sticky" style="top: 2rem;">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Book This Package</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span>Base Price:</span>
+                            <span class="fw-bold">$@Model.Package.price</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>Per Person</span>
+                            <span class="text-muted">(includes all taxes)</span>
+                        </div>
+                    </div>
+                    
+                    <hr>
+
+                    <form id="bookingForm" method="post" action="@Url.Action("CreateBooking", "Booking")">
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden" name="bk_type" value="package" />
+                        <input type="hidden" name="trip_id" value="@Model.Package.pkg_id" />
+                        <input type="hidden" name="price_per_person" value="@Model.Package.price" />
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.travel_start_date, new { @class = "form-label fw-semibold" })
+                            @Html.TextBoxFor(m => m.travel_start_date, new
+                            {
+                                @class = "form-control",
+                                @type = "date",
+                                @required = "required",
+                                @min = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")
+                            })
+                            @Html.ValidationMessageFor(m => m.travel_start_date, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.travel_end_date, new { @class = "form-label fw-semibold" })
+                            @Html.TextBoxFor(m => m.travel_end_date, new
+                            {
+                                @class = "form-control",
+                                @type = "date",
+                                @required = "required",
+                                @min = DateTime.Now.AddDays(2).ToString("yyyy-MM-dd")
+                            })
+                            @Html.ValidationMessageFor(m => m.travel_end_date, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.numtravelers, new { @class = "form-label fw-semibold" })
+                            <div class="input-group">
+                                <button type="button" class="btn btn-outline-secondary" id="decreaseBtn"><i class="bi bi-dash"></i></button>
+                                @Html.TextBoxFor(m => m.numtravelers, new
+                                {
+                                    @class = "form-control text-center",
+                                    @value = "1",
+                                    @min = "1",
+                                    @max = "10",
+                                    @required = "required"
+                                })
+                                <button type="button" class="btn btn-outline-secondary" id="increaseBtn"><i class="bi bi-plus"></i></button>
+                            </div>
+                            @Html.ValidationMessageFor(m => m.numtravelers, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.bk_cost, new { @class = "form-label fw-semibold" })
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                @Html.TextBoxFor(m => m.bk_cost, new
+                                {
+                                    @class = "form-control",
+                                    @readonly = "readonly"
+                                })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.bk_cost, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn btn-autumn rounded-pill fw-bold">Book Now</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer bg-light">
+                    <div class="small text-muted">
+                        <i class="bi bi-info-circle me-1"></i> A 20% deposit is required to confirm your booking. The remaining balance is due 30 days before departure.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="text-center mt-4">
+        <a href="@Url.Action("Index", "Package")" class="btn btn-outline-primary">
+            <i class="bi bi-arrow-left me-2"></i>Back to All Packages
+        </a>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const travelStartDate = document.getElementById('travel_start_date');
+            const travelEndDate = document.getElementById('travel_end_date');
+            const numTravelersInput = document.getElementById('numtravelers');
+            const decreaseBtn = document.getElementById('decreaseBtn');
+            const increaseBtn = document.getElementById('increaseBtn');
+            const bookingCostInput = document.getElementById('bk_cost');
+            const pricePerPerson = parseFloat('@Model.Package.price');
+            
+            // Calculation functions
+            function calculateDuration() {
+                const startDate = new Date(travelStartDate.value);
+                const endDate = new Date(travelEndDate.value);
+                
+                if (startDate && endDate && endDate >= startDate) {
+                    // Calculate difference in days
+                    const diffTime = Math.abs(endDate - startDate);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    return diffDays;
+                }
+                
+                return 0;
+            }
+            
+            function calculateTotalCost() {
+                const numTravelers = parseInt(numTravelersInput.value) || 1;
+                
+                // Calculate total cost (price per person * number of travelers)
+                const totalCost = pricePerPerson * numTravelers;
+                
+                // Update the booking cost input
+                bookingCostInput.value = totalCost.toFixed(2);
+                
+                return totalCost;
+            }
+            
+            travelStartDate.addEventListener('change', function() {
+                const startValue = travelStartDate.value;
+                if (startValue) {
+                    const nextDay = new Date(startValue);
+                    nextDay.setDate(nextDay.getDate() + 1);
+                    travelEndDate.min = nextDay.toISOString().split('T')[0];
+                    
+                    if (travelEndDate.value && new Date(travelEndDate.value) <= new Date(startValue)) {
+                        travelEndDate.value = nextDay.toISOString().split('T')[0];
+                    }
+                }
+                
+                calculateTotalCost();
+            });
+            
+            travelEndDate.addEventListener('change', calculateTotalCost);
+            
+            numTravelersInput.addEventListener('change', function() {
+                const value = parseInt(this.value) || 1;
+                this.value = Math.max(1, Math.min(10, value));
+                calculateTotalCost();
+            });
+            
+            decreaseBtn.addEventListener('click', function() {
+                const currentValue = parseInt(numTravelersInput.value) || 1;
+                if (currentValue > 1) {
+                    numTravelersInput.value = currentValue - 1;
+                    calculateTotalCost();
+                }
+            });
+            
+            increaseBtn.addEventListener('click', function() {
+                const currentValue = parseInt(numTravelersInput.value) || 1;
+                if (currentValue < 10) {
+                    numTravelersInput.value = currentValue + 1;
+                    calculateTotalCost();
+                }
+            });
+            
+            if (!travelStartDate.value) {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                travelStartDate.value = tomorrow.toISOString().split('T')[0];
+                
+                const endDefault = new Date();
+                endDefault.setDate(endDefault.getDate() + 8);
+                travelEndDate.value = endDefault.toISOString().split('T')[0];
+                
+                calculateTotalCost();
+            }
+        });
+    </script>
+}

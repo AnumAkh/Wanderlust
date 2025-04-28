@@ -1,0 +1,34 @@
+﻿@model Wanderlust.ViewModel.BookingDetailsViewModel
+
+@{
+    ViewBag.Title = "Booking Details";
+}
+
+<h2>Booking Details</h2>
+
+<div>
+    <h3>@Model.Booking.bk_type</h3>
+    <p><strong>Date:</strong> @Model.Booking.bk_date.ToString("MM/dd/yyyy")</p>
+    <p><strong>Status:</strong> @Model.Booking.status</p>
+    <p><strong>Cost:</strong> @Model.Booking.bk_cost</p>
+
+    @if (Model.PackageInfo != null)
+    {
+        <h4>Package Details</h4>
+        <p>@Model.PackageInfo.name</p>
+    }
+
+    @if (Model.DestinationInfo != null)
+    {
+        <h4>Destination Details</h4>
+        <p>@Model.DestinationInfo.destName</p>
+    }
+
+    @*@if (Model.ItineraryInfo != null)
+    {
+        <h4>Itinerary Details</h4>
+        <p>@Model.ItineraryInfo.itinerary_name</p>
+    }*@
+
+    <p><a href="@Url.Action("CreateBooking", "Booking", new { id = Model.Booking.booking_id })" class="btn btn-primary">Book Now</a></p>
+</div>

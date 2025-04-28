@@ -1,13 +1,7 @@
-﻿using System;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Web;
-using System.Web.Helpers;
+﻿using System.Linq;
 using System.Web.Mvc;
 using System.Web.Security;
 using Wanderlust.Models;
-using Wanderlust.ViewModel;
 using Wanderlust.ViewModel;
 
 namespace Wanderlust.Controllers
@@ -37,8 +31,8 @@ namespace Wanderlust.Controllers
                 // Find the user by email
                 var user = _context.USERs.FirstOrDefault(u => u.email == model.Email);
 
-                // Check if user exists and password is correct
-                if (user != null && VerifyPassword(model.Password, user.password))
+                // Check if user exists and password matches (no hashing)
+                if (user != null && user.password == model.Password)
                 {
                     // Create auth cookie
                     FormsAuthentication.SetAuthCookie(user.email, model.RememberMe);
@@ -83,11 +77,11 @@ namespace Wanderlust.Controllers
                     return View(model);
                 }
 
-                // Create new user
+                // Create new user (save password as plain text)
                 var user = new USER
                 {
                     email = model.Email,
-                    password = HashPassword(model.Password),
+                    password = model.Password,
                     firstName = model.FirstName,
                     lastName = model.LastName,
                     // Set other properties as needed
@@ -115,24 +109,6 @@ namespace Wanderlust.Controllers
             FormsAuthentication.SignOut();
             Session.Clear();
             return RedirectToAction("Index", "Home");
-        }
-
-        // Helper methods for password hashing (you should use a proper hashing library)
-        private string HashPassword(string password)
-        {
-            using (var sha256 = SHA256.Create())
-            {
-                var bytes = Encoding.UTF8.GetBytes(password);
-                var hash = sha256.ComputeHash(bytes);
-                return Convert.ToBase64String(hash);
-            }
-        }
-
-        // Verify the password
-        private bool VerifyPassword(string password, string hashedPassword)
-        {
-            var hashedInputPassword = HashPassword(password);
-            return hashedInputPassword == hashedPassword;
         }
 
         protected override void Dispose(bool disposing)

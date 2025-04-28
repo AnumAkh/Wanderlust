@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewBag.Title = "BookingSummary";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>BookingSummary</h2>
+
+<div>
+    <h3>Booking Information</h3>
+    <p><strong>Booking ID:</strong> @Model.Booking.booking_id</p>
+    <p><strong>Status:</strong> @Model.Booking.status</p>
+    <p><strong>Cost:</strong> @Model.Booking.bk_cost.ToString("C")</p>
+
+    @if (Model.PackageInfo != null)
+    {
+        <h4>Package Details</h4>
+        <p>@Model.PackageInfo.pkg_name</p>
+    }
+
+    @if (Model.DestinationInfo != null)
+    {
+        <h4>Destination Details</h4>
+        <p>@Model.DestinationInfo.dest_name</p>
+    }
+
+    @if (Model.ItineraryInfo != null)
+    {
+        <h4>Itinerary Details</h4>
+        <p>@Model.ItineraryInfo.itinerary_name</p>
+    }
+
+    <h3>Payments</h3>
+    <ul>
+        @foreach (var payment in Model.Payments)
+        {
+            <li>Payment of @payment.amount.ToString("C") on @payment.payment_date.ToString("MM/dd/yyyy")</li>
+        }
+    </ul>
+</div>

@@ -22,8 +22,8 @@ public class HomeController : Controller
     {
         var viewModel = new HomeViewModel
         {
-            FeaturedDestinations = _context.DESTINATIONs.Take(6).ToList(),
-            FeaturedPackages = _context.PACKAGEs.Take(4).ToList()
+            FeaturedDestinations = _context.DESTINATIONs.Take(4).ToList(),
+            FeaturedPackages = _context.Packages.Take(4).ToList()
         };
         return View(viewModel);
     }

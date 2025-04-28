@@ -130,9 +130,11 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BookingController.cs" />
     <Compile Include="Controllers\HomeController.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
+    <Compile Include="Controllers\PackageController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -191,8 +193,12 @@
       <DependentUpon>Wanderlust.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\BookingDetailsViewModel.cs" />
+    <Compile Include="ViewModel\BookingSummaryViewModel.cs" />
     <Compile Include="ViewModel\HomeViewModel.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
+    <Compile Include="ViewModel\PackageDetailsViewModel.cs" />
+    <Compile Include="ViewModel\PaymentViewModel.cs" />
     <Compile Include="ViewModel\RegisterViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -224,22 +230,30 @@
     <Content Include="Images\Carousel\car-3.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\Destinations\banff.jpg" />
     <Content Include="Images\Destinations\bavaria.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\Destinations\borabora.jpg" />
     <Content Include="Images\Destinations\hallstatt.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\Destinations\kyoto.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\Destinations\prague.jpg" />
+    <Content Include="Images\Destinations\santorini.jpg" />
     <Content Include="Images\Destinations\vermont.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\Packages\city-explorer.jpg" />
     <Content Include="Images\Packages\cultural-tour.jpg" />
+    <Content Include="Images\Packages\desert-safari.jpg" />
     <Content Include="Images\Packages\island-getaway.jpg" />
+    <Content Include="Images\Packages\luxury-cruise.jpg" />
     <Content Include="Images\Packages\mountain-adventure.jpg" />
+    <Content Include="Images\Packages\snowy-retreat.jpg" />
+    <Content Include="Images\Packages\wildlife-safari.jpg" />
     <Content Include="Models\Wanderlust.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Wanderlust.edmx</DependentUpon>
@@ -296,6 +310,18 @@
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Package\Create.cshtml" />
+    <Content Include="Views\Package\Delete.cshtml" />
+    <Content Include="Views\Package\Details.cshtml" />
+    <Content Include="Views\Package\Edit.cshtml" />
+    <Content Include="Views\Package\Index.cshtml" />
+    <Content Include="Views\Booking\Create.cshtml" />
+    <Content Include="Views\Booking\Delete.cshtml" />
+    <Content Include="Views\Booking\Details.cshtml" />
+    <Content Include="Views\Booking\Edit.cshtml" />
+    <Content Include="Views\Booking\Index.cshtml" />
+    <Content Include="Views\Booking\Payment.cshtml" />
+    <Content Include="Views\Booking\BookingSummary.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
