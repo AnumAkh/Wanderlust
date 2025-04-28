@@ -1,30 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Data.Entity;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using Wanderlust.Models;
+using Wanderlust.ViewModel;
 
-namespace Wanderlust.Controllers
+public class HomeController : Controller
 {
-    public class HomeController : Controller
+    private readonly WanderlustEntities _context;
+
+    public HomeController()
     {
-        public ActionResult Index()
+        _context = new WanderlustEntities(); // default initialization
+    }
+
+    public HomeController(WanderlustEntities context)
+    {
+        _context = context;
+    }
+
+    public ActionResult Index()
+    {
+        var viewModel = new HomeViewModel
         {
-            return View();
-        }
-
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
+            FeaturedDestinations = _context.DESTINATIONs.Take(6).ToList(),
+            FeaturedPackages = _context.PACKAGEs.Take(4).ToList()
+        };
+        return View(viewModel);
     }
 }
