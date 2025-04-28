@@ -1,0 +1,208 @@
+﻿@model Wanderlust.Models.DESTINATION
+
+@{
+    ViewBag.Title = "Destination Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .destination-image-container {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        position: relative;
+        margin-bottom: 20px;
+        height: 350px;
+    }
+
+    .destination-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .destination-name-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0));
+        color: white;
+        padding: 30px 20px 20px;
+    }
+
+    .card-sticky {
+        position: sticky;
+        top: 20px;
+    }
+
+    .total-cost-display {
+        background-color: #f8f9fa;
+        border-radius: 4px;
+        padding: 15px;
+    }
+
+    .price-display {
+        color: #007bff;
+        font-weight: bold;
+    }
+
+    @*@media (max-width: 991.98px) {
+        .card-sticky {
+            position: static;
+            margin-top: 30px;
+        }
+    }*@
+</style>
+
+<div class="container py-4">
+    <div class="row mb-3">
+        <div class="col-12">
+            <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Destinations
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Left Side: Destination Details -->
+        <div class="col-lg-8 mb-4">
+            <div class="destination-image-container">
+                <img src="~/@Model.image" alt="@Model.destName" class="destination-image" />
+                <div class="destination-name-overlay">
+                    <h2 class="mb-0">@Model.destName</h2>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h4>About this destination</h4>
+                    <p class="lead">@Model.description</p>
+
+                    @using (Html.BeginForm("Add", "Itinerary", FormMethod.Post, new { @class = "mt-4" }))
+                    {
+                        @Html.HiddenFor(model => model.dest_id)
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-plus-circle"></i> Add to Itinerary
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side: Booking Card -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm card-sticky">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="mb-0">Book Your Trip</h5>
+                </div>
+
+                <div class="card-body">
+                    <div class="mb-4">
+                        <h4 class="mb-2">$@Model.price <small class="text-muted">per person</small></h4>
+                    </div>
+
+                    @using (Html.BeginForm("Create", "Booking", FormMethod.Post))
+                    {
+                        @Html.HiddenFor(model => model.dest_id)
+                        <input type="hidden" name="pricePerPerson" value="@Model.price" id="pricePerPerson" />
+
+                        <div class="row mb-3">
+                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                <label for="startDate" class="form-label">Start Date</label>
+                                <input type="date" name="startDate" id="startDate" class="form-control" required />
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label for="endDate" class="form-label">End Date</label>
+                                <input type="date" name="endDate" id="endDate" class="form-control" required />
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="travelersInput" class="form-label">Number of Travelers</label>
+                            <input type="number" name="numberOfTravelers" id="travelersInput"
+                                   class="form-control" value="1" min="1" onchange="calculateTotal()"
+                                   onkeyup="calculateTotal()" required />
+                        </div>
+
+                        <div class="total-cost-display mb-4">
+                            <div class="d-flex justify-content-between align-items-end">
+                                <div>
+                                    <label class="form-label mb-0">Total Cost:</label>
+                                    <div class="price-display fs-4" id="totalCost">
+                                        $@Model.price
+                                    </div>
+                                </div>
+
+                                <div class="text-end">
+                                    <small class="text-muted" id="daysInfo"></small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            <i class="bi bi-bag-check"></i> Book Now
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Set minimum dates to today
+    document.addEventListener('DOMContentLoaded', function () {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('startDate').min = today;
+        document.getElementById('endDate').min = today;
+
+        // Initial calculation
+        calculateTotal();
+
+        // Add event listeners
+        document.getElementById('startDate').addEventListener('change', updateEndDateMin);
+        document.getElementById('startDate').addEventListener('change', calculateTotal);
+        document.getElementById('endDate').addEventListener('change', calculateTotal);
+    });
+
+    function updateEndDateMin() {
+        const startDate = document.getElementById('startDate').value;
+        if (startDate) {
+            document.getElementById('endDate').min = startDate;
+
+            // If end date is before start date, update it
+            const endDate = document.getElementById('endDate').value;
+            if (endDate && endDate < startDate) {
+                document.getElementById('endDate').value = startDate;
+            }
+        }
+    }
+
+    function calculateTotal() {
+        const pricePerPerson = parseFloat(document.getElementById("pricePerPerson").value);
+        const travelers = parseInt(document.getElementById("travelersInput").value) || 1;
+
+        // Calculate total
+        const total = pricePerPerson * travelers;
+        document.getElementById("totalCost").innerText = "$" + total.toFixed(2);
+
+        // Calculate days if dates are selected
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+
+        if (startDate && endDate) {
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            const days = Math.round((end - start) / (1000 * 60 * 60 * 24)) + 1;
+
+            if (days > 0) {
+                document.getElementById('daysInfo').innerText =
+                    `${days} day${days > 1 ? 's' : ''} · ${travelers} traveler${travelers > 1 ? 's' : ''}`;
+            } else {
+                document.getElementById('daysInfo').innerText = '';
+            }
+        }
+    }
+</script>

@@ -18,3 +18,15 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.btn-autumn {
+    background-color: #ffa07a;
+    border: none;
+    color: black;
+    transition: 0.3s ease;
+}
+
+    .btn-autumn:hover {
+        background-color: #ff7f50;
+        color: white;
+    }
