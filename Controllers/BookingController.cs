@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using Wanderlust.Models;
 using Wanderlust.ViewModel;
+using System.Collections.Generic;
 
 
 namespace Wanderlust.Controllers
@@ -78,7 +79,6 @@ namespace Wanderlust.Controllers
             return View(viewModel);
         }
 
-        // POST: Booking/CreateBooking
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreateBooking(BOOKING model)
@@ -100,51 +100,108 @@ namespace Wanderlust.Controllers
 
                 // Set initial status
                 model.status = "Pending";
-                
-                
 
-                // Set trip ID based on booking type
-                //switch (model.bk_type?.ToLower() ?? "")
-                //{
-                //    case "package":
-                //        model.trip_id = model.trip_id; // Ensure you get correct trip ID based on type
-                //        break;
-                //    case "destination":
-                //        model.trip_id = model.trip_id;
-                //        break;
-                //    case "itinerary":
-                //        model.trip_id = model.trip_id;
-                //        break;
-                //    default:
-                //        TempData["ErrorMessage"] = "Invalid booking type.";
-                //        return RedirectToAction("Index", "Home");
-                //}
-                //var booking = new BOOKING
-                //{
-                //    bk_type = model.bk_type,
-                //    trip_id = model.trip_id,
-                //    travel_start_date = model.travel_start_date,
-                //    travel_end_date = model.travel_end_date,
-                //    numtravelers = model.numtravelers,
-                //    bk_cost = model.bk_cost,
-                //    user_id = model.user_id,
-                //    bk_date = DateTime.Now,
-                //    status = "Pending"
-                //};
+                // Print model values to debug console
+                System.Diagnostics.Debug.WriteLine("Creating booking with values:");
+                System.Diagnostics.Debug.WriteLine($"Type: {model.bk_type}");
+                System.Diagnostics.Debug.WriteLine($"Trip ID: {model.trip_id}");
+                System.Diagnostics.Debug.WriteLine($"Start Date: {model.travel_start_date}");
+                System.Diagnostics.Debug.WriteLine($"End Date: {model.travel_end_date}");
+                System.Diagnostics.Debug.WriteLine($"Travelers: {model.numtravelers}");
+                System.Diagnostics.Debug.WriteLine($"Cost: {model.bk_cost}");
+                System.Diagnostics.Debug.WriteLine($"User ID: {model.user_id}");
+                System.Diagnostics.Debug.WriteLine($"Booking Date: {model.bk_date}");
+
+                // IMPORTANT: Make sure booking_id is 0 so Entity Framework knows it's a new entry
+                // This is likely the cause of your problem
+                model.booking_id = 0;
+                System.Diagnostics.Debug.WriteLine($"Booking Id: {model.booking_id}");
+                System.Diagnostics.Debug.WriteLine($"Status: {model.status}");
+
+                // Create a new booking object instead of using the model directly
+                // This helps avoid any tracking issues with Entity Framework
+                var booking = new BOOKING
+                {
+                    bk_type = model.bk_type,
+                    trip_id = model.trip_id,
+                    travel_start_date = model.travel_start_date,
+                    travel_end_date = model.travel_end_date,
+                    numtravelers = model.numtravelers,
+                    bk_cost = model.bk_cost,
+                    user_id = model.user_id,
+                    bk_date = model.bk_date,
+                    status = model.status
+                    // Notice we're not setting booking_id - let the database auto-increment it
+                };
 
                 // Add the booking to the database
-                db.BOOKINGs.Add(model);
-                db.SaveChanges();
+                db.BOOKINGs.Add(booking);
 
-                // Store the booking ID for confirmation and redirect to payment page
-                TempData["BookingId"] = model.booking_id;
-                return RedirectToAction("Payment", new { id = model.booking_id });
+                try
+                {
+                    db.SaveChanges();
+                    System.Diagnostics.Debug.WriteLine($"Successfully created booking with ID: {booking.booking_id}");
+
+                    // Store the booking ID for confirmation and redirect to payment page
+                    TempData["BookingId"] = booking.booking_id;
+                    TempData["SuccessMessage"] = "Your booking has been created successfully!";
+                    return RedirectToAction("Payment", new { id = booking.booking_id });
+                }
+                catch (System.Data.Entity.Validation.DbEntityValidationException dbEx)
+                {
+                    // Handle validation errors
+                    foreach (var validationErrors in dbEx.EntityValidationErrors)
+                    {
+                        foreach (var validationError in validationErrors.ValidationErrors)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Property: {validationError.PropertyName} Error: {validationError.ErrorMessage}");
+                        }
+                    }
+
+                    TempData["ErrorMessage"] = "Validation error: " + dbEx.Message;
+                    throw;
+                }
+                catch (System.Data.Entity.Infrastructure.DbUpdateException dbUpdateEx)
+                {
+                    // This will capture the REAL error message from SQL Server
+                    var innerException = dbUpdateEx.InnerException;
+                    while (innerException.InnerException != null)
+                    {
+                        innerException = innerException.InnerException;
+                    }
+
+                    System.Diagnostics.Debug.WriteLine($"ACTUAL DATABASE ERROR: {innerException.Message}");
+                    TempData["ErrorMessage"] = "Database error: " + innerException.Message;
+                    throw;
+                }
             }
             catch (Exception ex)
             {
-                // Log the exception
-                TempData["ErrorMessage"] = "An error occurred while processing your booking. Please try again.";
-                return RedirectToAction("Index", "Home");
+                // Get the innermost exception (this will have the actual SQL error)
+                var innerEx = ex;
+                while (innerEx.InnerException != null)
+                {
+                    innerEx = innerEx.InnerException;
+                }
+
+                System.Diagnostics.Debug.WriteLine($"Exception in CreateBooking: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"INNERMOST EXCEPTION: {innerEx.Message}");
+                System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+
+                TempData["ErrorMessage"] = "An error occurred: " + innerEx.Message;
+
+                // Redirect based on booking type
+                switch (model.bk_type?.ToLower() ?? "")
+                {
+                    case "package":
+                        return RedirectToAction("Details", "Package", new { id = model.trip_id });
+                    case "destination":
+                        return RedirectToAction("Details", "Destination", new { id = model.trip_id });
+                    case "itinerary":
+                        return RedirectToAction("Details", "Itinerary", new { id = model.trip_id });
+                    default:
+                        return RedirectToAction("Index", "Home");
+                }
             }
         }
 
@@ -224,16 +281,17 @@ namespace Wanderlust.Controllers
 
             int userId = Convert.ToInt32(Session["UserID"]);
             var booking = db.BOOKINGs.FirstOrDefault(b => b.booking_id == id && b.user_id == userId);
+            var payment = db.PAYMENTs.FirstOrDefault(p => p.booking_id == booking.booking_id);
 
             if (booking == null || booking.status != "Confirmed")
             {
                 return HttpNotFound();
             }
-
+            
             var viewModel = new BookingSummaryViewModel
             {
                 Booking = booking,
-                Payments = booking.PAYMENTs.ToList()
+                Payments = payment
             };
 
             // Include additional trip details based on booking type

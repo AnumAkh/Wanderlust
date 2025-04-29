@@ -12,6 +12,7 @@
     <p><strong>Cost:</strong> @Model.AmountToPay.ToString("C")</p>
 
     <form method="post" action="@Url.Action("ConfirmPayment", "Booking", new { id = Model.Booking.booking_id })">
+         @Html.AntiForgeryToken()
         <button type="submit" class="btn btn-success">Confirm Payment</button>
     </form>
 </div>

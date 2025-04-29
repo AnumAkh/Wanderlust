@@ -159,7 +159,7 @@
                     <form id="bookingForm" method="post" action="@Url.Action("CreateBooking", "Booking")">
                         @Html.AntiForgeryToken()
 
-                        <input type="hidden" name="bk_type" value="package" />
+                        <input type="hidden" name="bk_type" value="pkg" />
                         <input type="hidden" name="trip_id" value="@Model.Package.pkg_id" />
                         <input type="hidden" name="price_per_person" value="@Model.Package.price" />
 
