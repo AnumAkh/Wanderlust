@@ -232,12 +232,10 @@ namespace Wanderlust.Controllers
             return View(viewModel);
         }
 
-        // POST: Booking/ConfirmPayment/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ConfirmPayment(int id)
+        public ActionResult ConfirmPayment(int id, PaymentViewModel model)
         {
-            // Check if user is logged in
             if (Session["UserID"] == null)
             {
                 TempData["ErrorMessage"] = "Please login to confirm payment.";
@@ -252,22 +250,38 @@ namespace Wanderlust.Controllers
                 return HttpNotFound();
             }
 
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMessage"] = "Validation failed. Please check the input.";
+                return RedirectToAction("Payment", new { id = id });
+            }
+
+            var payment = new PAYMENT
+            {
+                booking_id = model.Payment.booking_id,
+                payMethod = model.Payment.payMethod,
+                amount = model.Payment.amount,
+                payment_date = DateTime.Now
+            };
+
+            db.PAYMENTs.Add(payment);
+            db.SaveChanges();
+
             try
             {
-                // Update status to "Confirmed"
                 booking.status = "Confirmed";
                 db.SaveChanges();
 
                 TempData["SuccessMessage"] = "Payment successful. Your booking is now confirmed.";
-
                 return RedirectToAction("BookingSummary", new { id = booking.booking_id });
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "An error occurred while processing your payment. Please try again.";
+                TempData["ErrorMessage"] = "An error occurred while processing your payment.";
                 return RedirectToAction("Payment", new { id = id });
             }
         }
+
 
         // GET: Booking/BookingSummary/5
         public ActionResult BookingSummary(int id)
@@ -281,13 +295,14 @@ namespace Wanderlust.Controllers
 
             int userId = Convert.ToInt32(Session["UserID"]);
             var booking = db.BOOKINGs.FirstOrDefault(b => b.booking_id == id && b.user_id == userId);
-            var payment = db.PAYMENTs.FirstOrDefault(p => p.booking_id == booking.booking_id);
+            
 
             if (booking == null || booking.status != "Confirmed")
             {
                 return HttpNotFound();
             }
-            
+
+            var payment = db.PAYMENTs.FirstOrDefault(p => p.booking_id == booking.booking_id);
             var viewModel = new BookingSummaryViewModel
             {
                 Booking = booking,
@@ -307,7 +322,6 @@ namespace Wanderlust.Controllers
                     viewModel.ItineraryInfo = db.ITINERARies.FirstOrDefault(i => i.itinerary_id == booking.trip_id);
                     break;
             }
-
             return View(viewModel);
         }
 

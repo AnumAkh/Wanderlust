@@ -1,0 +1,281 @@
+﻿@model Wanderlust.ViewModel.DestinationDetailsViewModel
+
+@{
+    ViewBag.Title = "Destination Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .destination-image-container {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        position: relative;
+        margin-bottom: 20px;
+        height: 350px;
+    }
+
+    .destination-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .destination-name-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0));
+        color: white;
+        padding: 30px 20px 20px;
+    }
+
+    .card-sticky {
+        position: sticky;
+        top: 20px;
+    }
+
+    .total-cost-display {
+        background-color: #f8f9fa;
+        border-radius: 4px;
+        padding: 15px;
+    }
+
+    .price-display {
+        color: #007bff;
+        font-weight: bold;
+    }
+
+    @*@media (max-width: 991.98px) {
+        .card-sticky {
+            position: static;
+            margin-top: 30px;
+        }
+    }*@
+</style>
+
+<div class="container py-4">
+    <div class="row mb-3">
+        <div class="col-12">
+            <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Destinations
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Left Side: Destination Details -->
+        <div class="col-lg-8 mb-4">
+            <div class="destination-image-container">
+                <img src="~/@Model.Destination.image" alt="@Model.Destination.destName" class="destination-image" />
+                <div class="destination-name-overlay">
+                    <h2 class="mb-0">@Model.Destination.destName</h2>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h4>About this destination</h4>
+                    <p class="lead">@Model.Destination.description</p>
+
+                    @using (Html.BeginForm("Add", "Itinerary", FormMethod.Post, new { @class = "mt-4" }))
+                    {
+                        @Html.HiddenFor(model => model.Destination.dest_id)
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-plus-circle"></i> Add to Itinerary
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Column -->
+        <div class="col-lg-4">
+            <!-- Booking Card -->
+            <div class="card shadow mb-4 position-sticky" style="top: 2rem;">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Book This Package</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span>Base Price:</span>
+                            <span class="fw-bold">$@Model.Destination.price</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>Per Person</span>
+                            <span class="text-muted">(includes all taxes)</span>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <form id="bookingForm" method="post" action="@Url.Action("CreateBooking", "Booking")">
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden" name="bk_type" value="dest" />
+                        <input type="hidden" name="trip_id" value="@Model.Destination.dest_id" />
+                        <input type="hidden" name="price_per_person" value="@Model.Destination.price" />
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.travel_start_date, new { @class = "form-label fw-semibold" })
+                            @Html.TextBoxFor(m => m.travel_start_date, new
+                            {
+                                @class = "form-control",
+                                @type = "date",
+                                @required = "required",
+                                @min = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")
+                            })
+                            @Html.ValidationMessageFor(m => m.travel_start_date, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.travel_end_date, new { @class = "form-label fw-semibold" })
+                            @Html.TextBoxFor(m => m.travel_end_date, new
+                            {
+                                @class = "form-control",
+                                @type = "date",
+                                @required = "required",
+                                @min = DateTime.Now.AddDays(2).ToString("yyyy-MM-dd")
+                            })
+                            @Html.ValidationMessageFor(m => m.travel_end_date, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.numtravelers, new { @class = "form-label fw-semibold" })
+                            <div class="input-group">
+                                <button type="button" class="btn btn-outline-secondary" id="decreaseBtn"><i class="bi bi-dash"></i></button>
+                                @Html.TextBoxFor(m => m.numtravelers, new
+                                {
+                                    @class = "form-control text-center",
+                                    @value = "1",
+                                    @min = "1",
+                                    @max = "10",
+                                    @required = "required"
+                                })
+                                <button type="button" class="btn btn-outline-secondary" id="increaseBtn"><i class="bi bi-plus"></i></button>
+                            </div>
+                            @Html.ValidationMessageFor(m => m.numtravelers, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.bk_cost, new { @class = "form-label fw-semibold" })
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                @Html.TextBoxFor(m => m.bk_cost, new
+                                {
+                                    @class = "form-control",
+                                    @readonly = "readonly"
+                                })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.bk_cost, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn btn-autumn rounded-pill fw-bold">Book Now</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer bg-light">
+                    <div class="small text-muted">
+                        <i class="bi bi-info-circle me-1"></i> A 20% deposit is required to confirm your booking. The remaining balance is due 30 days before departure.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const travelStartDate = document.getElementById('travel_start_date');
+            const travelEndDate = document.getElementById('travel_end_date');
+            const numTravelersInput = document.getElementById('numtravelers');
+            const decreaseBtn = document.getElementById('decreaseBtn');
+            const increaseBtn = document.getElementById('increaseBtn');
+            const bookingCostInput = document.getElementById('bk_cost');
+            const pricePerPerson = parseFloat('@Model.Destination.price');
+
+            // Calculation functions
+            function calculateDuration() {
+                const startDate = new Date(travelStartDate.value);
+                const endDate = new Date(travelEndDate.value);
+
+                if (startDate && endDate && endDate >= startDate) {
+                    // Calculate difference in days
+                    const diffTime = Math.abs(endDate - startDate);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    return diffDays;
+                }
+
+                return 0;
+            }
+
+            function calculateTotalCost() {
+                const numTravelers = parseInt(numTravelersInput.value) || 1;
+
+                // Calculate total cost (price per person * number of travelers)
+                const totalCost = pricePerPerson * numTravelers;
+
+                // Update the booking cost input
+                bookingCostInput.value = totalCost.toFixed(2);
+
+                return totalCost;
+            }
+
+            travelStartDate.addEventListener('change', function() {
+                const startValue = travelStartDate.value;
+                if (startValue) {
+                    const nextDay = new Date(startValue);
+                    nextDay.setDate(nextDay.getDate() + 1);
+                    travelEndDate.min = nextDay.toISOString().split('T')[0];
+
+                    if (travelEndDate.value && new Date(travelEndDate.value) <= new Date(startValue)) {
+                        travelEndDate.value = nextDay.toISOString().split('T')[0];
+                    }
+                }
+
+                calculateTotalCost();
+            });
+
+            travelEndDate.addEventListener('change', calculateTotalCost);
+
+            numTravelersInput.addEventListener('change', function() {
+                const value = parseInt(this.value) || 1;
+                this.value = Math.max(1, Math.min(10, value));
+                calculateTotalCost();
+            });
+
+            decreaseBtn.addEventListener('click', function() {
+                const currentValue = parseInt(numTravelersInput.value) || 1;
+                if (currentValue > 1) {
+                    numTravelersInput.value = currentValue - 1;
+                    calculateTotalCost();
+                }
+            });
+
+            increaseBtn.addEventListener('click', function() {
+                const currentValue = parseInt(numTravelersInput.value) || 1;
+                if (currentValue < 10) {
+                    numTravelersInput.value = currentValue + 1;
+                    calculateTotalCost();
+                }
+            });
+
+            if (!travelStartDate.value) {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                travelStartDate.value = tomorrow.toISOString().split('T')[0];
+
+                const endDefault = new Date();
+                endDefault.setDate(endDefault.getDate() + 8);
+                travelEndDate.value = endDefault.toISOString().split('T')[0];
+
+                calculateTotalCost();
+            }
+        });
+    </script>
+}

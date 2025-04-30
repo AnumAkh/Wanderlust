@@ -131,10 +131,12 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BookingController.cs" />
+    <Compile Include="Controllers\DestinationController.cs" />
     <Compile Include="Controllers\HomeController.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Controllers\PackageController.cs" />
+    <Compile Include="Controllers\WishlistController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -195,6 +197,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\BookingDetailsViewModel.cs" />
     <Compile Include="ViewModel\BookingSummaryViewModel.cs" />
+    <Compile Include="ViewModel\DestinationDetailsViewModel.cs" />
     <Compile Include="ViewModel\HomeViewModel.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\PackageDetailsViewModel.cs" />
@@ -322,6 +325,16 @@
     <Content Include="Views\Booking\Index.cshtml" />
     <Content Include="Views\Booking\Payment.cshtml" />
     <Content Include="Views\Booking\BookingSummary.cshtml" />
+    <Content Include="Views\Wishlist\Create.cshtml" />
+    <Content Include="Views\Wishlist\Delete.cshtml" />
+    <Content Include="Views\Wishlist\Details.cshtml" />
+    <Content Include="Views\Wishlist\Edit.cshtml" />
+    <Content Include="Views\Wishlist\Index.cshtml" />
+    <Content Include="Views\Destination\Create.cshtml" />
+    <Content Include="Views\Destination\Delete.cshtml" />
+    <Content Include="Views\Destination\Details.cshtml" />
+    <Content Include="Views\Destination\Edit.cshtml" />
+    <Content Include="Views\Destination\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

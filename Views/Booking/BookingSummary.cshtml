@@ -1,40 +1,76 @@
-﻿
+﻿@model Wanderlust.ViewModel.BookingSummaryViewModel
+
 @{
-    ViewBag.Title = "BookingSummary";
+    ViewBag.Title = "Booking Summary";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>BookingSummary</h2>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
 
-<div>
-    <h3>Booking Information</h3>
-    <p><strong>Booking ID:</strong> @Model.Booking.booking_id</p>
-    <p><strong>Status:</strong> @Model.Booking.status</p>
-    <p><strong>Cost:</strong> @Model.Booking.bk_cost.ToString("C")</p>
+<div class="container mt-5">
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-header bg-primary text-white rounded-top-4">
+            <h2 class="mb-0"><i class="bi bi-clipboard-check me-2"></i>Booking Summary</h2>
+        </div>
+        <div class="card-body">
+            <!-- Booking Info -->
+            <h4 class="fw-semibold mb-3"><i class="bi bi-info-circle me-1"></i>Booking Information</h4>
+            <ul class="list-group mb-4">
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Booking ID:</span>
+                    <span>@Model.Booking.booking_id</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Status:</span>
+                    <span class="badge bg-success">@Model.Booking.status</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Cost:</span>
+                    <span>@Model.Booking.bk_cost.ToString("C")</span>
+                </li>
+            </ul>
 
-    @if (Model.PackageInfo != null)
-    {
-        <h4>Package Details</h4>
-        <p>@Model.PackageInfo.pkg_name</p>
-    }
+            <!-- Trip Info -->
+            @if (Model.PackageInfo != null)
+            {
+                <h5 class="text-decoration-underline"><i class="bi bi-box-seam me-1"></i>Package Details</h5>
+                <p class="mb-3">@Model.PackageInfo.name</p>
+            }
+            @if (Model.DestinationInfo != null)
+            {
+                <h5 class="text-decoration-underline"><i class="bi bi-geo-alt me-1"></i>Destination Details</h5>
+                <p class="mb-3">@Model.DestinationInfo.destName</p>
+            }
+            @if (Model.ItineraryInfo != null)
+            {
+                <h5 class="text-decoration-underline"><i class="bi bi-calendar3-week me-1"></i>Itinerary Details</h5>
+                @*<p class="mb-3">@Model.ItineraryInfo.i</p>*@
+                <p>Itineary Name</p>
+            }
 
-    @if (Model.DestinationInfo != null)
-    {
-        <h4>Destination Details</h4>
-        <p>@Model.DestinationInfo.dest_name</p>
-    }
-
-    @if (Model.ItineraryInfo != null)
-    {
-        <h4>Itinerary Details</h4>
-        <p>@Model.ItineraryInfo.itinerary_name</p>
-    }
-
-    <h3>Payments</h3>
-    <ul>
-        @foreach (var payment in Model.Payments)
-        {
-            <li>Payment of @payment.amount.ToString("C") on @payment.payment_date.ToString("MM/dd/yyyy")</li>
-        }
-    </ul>
-</div>s
+            <!-- Payment Info -->
+            <h4 class="fw-semibold mt-4"><i class="bi bi-credit-card-2-back-fill me-1"></i>Payment Details</h4>
+            @if (Model.Payments != null)
+            {
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Amount Paid:</span>
+                        <span>@Model.Payments.amount.ToString("C")</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Payment Date:</span>
+                        <span>@Model.Payments.payment_date.ToString("MM/dd/yyyy")</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Payment Method:</span>
+                        <span>@Model.Payments.payMethod</span>
+                    </li>
+                </ul>
+            }
+            else
+            {
+                <p class="text-muted">No payment record found.</p>
+            }
+        </div>
+    </div>
+</div>
