@@ -1,33 +1,4 @@
-﻿@*<div class="container my-5">
-        <section class="mb-5">
-            <h2 class="mb-4 text-center ">Destinations</h2>
-            <div class="row g-4">
-                @if (Model != null && Model.Any())
-                {
-                    foreach (var item in Model)
-                    {
-                        <div class="col-md-3">
-                            <div class="card h-100 shadow-sm">
-                                <img src="~/@item.image" class="card-img-top" alt="@item.destName" style="height: 200px; object-fit: cover;">
-                                <div class="card-body d-flex flex-column">
-                                    <h5 class="card-title text-center">@item.destName</h5>
-                                    @Html.ActionLink("Details", "Details", new { id = item.dest_id }, new { @class = "btn btn-outline-secondary btn-sm" })
-                                </div>
-                            </div>
-                        </div>
-
-                    }
-                }
-                else
-                {
-                    <p colspan="5" class="text-center">No destinations found.</p>
-                }
-            </div>
-        </section>
-        <hr class="my-5" />
-    </div>*@
-
-@model IEnumerable<Wanderlust.Models.DESTINATION>
+﻿@model IEnumerable<Wanderlust.Models.DESTINATION>
 
 @{
     ViewBag.Title = "Destinations";
@@ -35,6 +6,7 @@
 }
 
 <div class="container my-5">
+    <div id="wishlist-message" class="alert alert-success" style="display: none;"></div>
     <h2 class="text-center mb-4 " style="color: #ff7f50; ">Destinations</h2>
 
     <div class="row g-4">
@@ -46,13 +18,71 @@
 
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title text-center" style="color: #d2691e;">@item.destName</h5>
-
-                        <div class="mt-auto d-flex justify-content-center pt-2">
-                            @Html.ActionLink("View Details 🍂", "Details", new { id = item.dest_id }, new { @class = "btn btn-autumn btn-sm" })
+                        <div class="mt-auto d-flex justify-content-between pt-2">
+                            <div>
+                                @Html.ActionLink("View Details 🍂", "Details", new { id = item.dest_id }, new { @class = "btn btn-autumn btn-sm" })
+                            </div>
+                            @if (Session["UserID"] != null)
+                            {
+                                <button type="button" class="btn btn-outline-danger btn-sm add-to-wishlist"
+                                        data-id="@item.dest_id"
+                                        data-url="@Url.Action("AddToWishlist", "Wishlist", new { id = item.dest_id })"
+                                        title="Add to Wishlist">
+                                    <i class="bi bi-heart"></i>
+                                </button>
+                            }
                         </div>
                     </div>
                 </div>
             </div>
         }
     </div>
+    @section Scripts {
+        <script>
+  $(document).ready(function () {
+    // Show TempData messages if available
+           @if (TempData["SuccessMessage"] != null)
+            {
+                <text>
+                    $('#wishlist-message').text('@TempData["SuccessMessage"]').show().delay(3000).fadeOut();
+                </text>
+            }
+
+            @if (TempData["InfoMessage"] != null)
+            {
+                <text>
+                    $('#wishlist-message').removeClass('alert-success').addClass('alert-info')
+                        .text('@TempData["InfoMessage"]').show().delay(3000).fadeOut();
+                </text>
+            }
+
+            // Handle Add to Wishlist button click
+            $('.add-to-wishlist').click(function() {
+                var button = $(this);
+                var destinationId = button.data('id');
+                var url = button.data('url');
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function (response) {
+                        $('#wishlist-message').text('Added to Wishlist!').show().delay(3000).fadeOut();
+
+                        // Change heart appearance
+                        button.html('<i class="bi bi-heart-fill"></i>')
+                            .removeClass('btn-outline-danger')
+                            .addClass('btn-danger');
+                    },
+                    error: function() {
+                        $('#wishlist-message').removeClass('alert-success').addClass('alert-danger')
+                            .text('Error adding to wishlist. Please try again.').show().delay(3000).fadeOut();
+                    }
+                });
+
+                return false;
+            });
+
+        });
+        </script>
+    }
 </div>

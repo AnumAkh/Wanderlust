@@ -251,6 +251,24 @@
             color: #6c757d;
         }
 
+        .dropdown-menu {
+            background-color: #fff8f0;
+        }
+
+        .dropdown-item:hover {
+            background-color: #ffa07a;
+        }
+
+        .user-welcome {
+            color: #fff;
+            display: flex;
+            align-items: center;
+        }
+
+        .user-icon {
+            margin-right: 5px;
+        }
+
         .character-counter {
             text-align: right;
             font-size: 0.8rem;
@@ -277,18 +295,82 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Index", "Home")">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Index", "Destination")">Destinations</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Index", "Package")">Packages</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Index", "Itinerary")">Itinerary</a>
-                        </li>
+                        @{
+                            if (Session["Role"] != null && Session["Role"].ToString() == "Author")
+                            {
+                                <!-- Author Navigation -->
+                                <li class="nav-item">
+                                    <a class="nav-link" href="@Url.Action("Index", "Blog")">Manage Blogs</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="@Url.Action("Create", "Blog")">Create Blog</a>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle user-welcome" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-pencil-square user-icon"></i>
+                                        @Session["AuthorName"]
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a class="dropdown-item" href="@Url.Action("Logout", "Account")">Logout</a></li>
+                                    </ul>
+                                </li>
+                            }
+                            else
+                            {
+                                <!-- Regular User or Not Logged In Navigation -->
+                                <li class="nav-item">
+                                    <a class="nav-link" href="@Url.Action("Index", "Home")">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="@Url.Action("Index", "Destination")">Destinations</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="@Url.Action("Index", "Package")">Packages</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="@Url.Action("Index", "Itinerary")">Itinerary</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="@Url.Action("Index", "Blog")">Blog</a>
+                                </li>
+
+                                if (Session["UserId"] != null)
+                                {
+                                    <!-- Logged-in User Navigation -->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="@Url.Action("Index", "Wishlist")">
+                                            <i class="bi bi-heart-fill text-white"></i>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle user-welcome" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="bi bi-person-circle user-icon"></i>
+                                            @Session["UserName"]
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li><a class="dropdown-item" href="@Url.Action("Index", "Booking")">My Bookings</a></li>
+                                            <li><a class="dropdown-item" href="@Url.Action("Dashboard", "Account")">Profile</a></li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li><a class="dropdown-item" href="@Url.Action("Logout", "Account")">Logout</a></li>
+                                        </ul>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <!-- Not Logged In Navigation -->
+                                    <li class="nav-item">
+                                        <a class="nav-link btn btn-outline-light me-2" href="@Url.Action("Login", "Account")">
+                                            <i class="bi bi-box-arrow-in-right"></i> Login
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link btn btn-light text-dark" href="@Url.Action("Register", "Account")">
+                                            <i class="bi bi-person-plus"></i> Register
+                                        </a>
+                                    </li>
+                                }
+                            }
+                        }
                     </ul>
                 </div>
             </div>

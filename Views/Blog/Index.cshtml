@@ -1,0 +1,64 @@
+﻿@model IEnumerable<Wanderlust.Models.BLOG>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.content)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.publication_date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.likes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dislikes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AUTHOR.firstName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.content)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.publication_date)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.likes)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.dislikes)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AUTHOR.firstName)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.blog_id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.blog_id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.blog_id })
+        </td>
+    </tr>
+}
+
+</table>

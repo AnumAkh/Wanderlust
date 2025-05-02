@@ -24,8 +24,6 @@
           <Property Name="title" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="content" Type="text" Nullable="false" />
           <Property Name="publication_date" Type="datetime" Nullable="false" />
-          <Property Name="likes" Type="int" />
-          <Property Name="dislikes" Type="int" />
         </EntityType>
         <EntityType Name="BOOKING">
           <Key>
@@ -429,8 +427,6 @@
           <Property Name="title" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="content" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="publication_date" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="likes" Type="Int32" />
-          <Property Name="dislikes" Type="Int32" />
           <NavigationProperty Name="AUTHOR" Relationship="Self.FK_BLOG_AUTHOR" FromRole="BLOG" ToRole="AUTHOR" />
           <NavigationProperty Name="COMMENTs" Relationship="Self.FK_COMMENT_BLOG" FromRole="BLOG" ToRole="COMMENT" />
         </EntityType>
@@ -862,8 +858,6 @@
                 <ScalarProperty Name="title" ColumnName="title" />
                 <ScalarProperty Name="content" ColumnName="content" />
                 <ScalarProperty Name="publication_date" ColumnName="publication_date" />
-                <ScalarProperty Name="likes" ColumnName="likes" />
-                <ScalarProperty Name="dislikes" ColumnName="dislikes" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

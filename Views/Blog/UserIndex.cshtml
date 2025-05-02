@@ -1,0 +1,43 @@
+﻿@model IEnumerable<Wanderlust.Models.BLOG>
+
+@{
+    ViewBag.Title = "Travel Blog";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container my-5">
+    <h2 class="text-center mb-4" style="color: #ff7f50;">Travel Blog</h2>
+
+    <div class="row g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow border-0" style="background-color: #fff5f0;">
+                    <div class="card-body">
+                        <h4 class="card-title" style="color: #d2691e;">@item.title</h4>
+                        <div class="d-flex justify-content-between mb-3">
+                            <small class="text-muted">
+                                <i class="bi bi-person"></i> @item.AUTHOR.firstName @item.AUTHOR.lastName
+                            </small>
+                            <small class="text-muted">
+                                <i class="bi bi-calendar3"></i> @item.publication_date.ToString("MMM dd, yyyy")
+                            </small>
+                        </div>
+
+                        <p class="card-text">
+                            @(item.content.Length > 150
+                                ? item.content.Substring(0, 150) + "..."
+                                : item.content)
+                        </p>
+
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                            <a href="@Url.Action("Details", "Blog", new { id = item.blog_id })" class="btn btn-autumn">
+                                Read More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

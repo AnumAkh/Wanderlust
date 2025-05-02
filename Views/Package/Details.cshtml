@@ -124,7 +124,9 @@
                                     <div class="card-footer bg-white">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <span class="badge bg-info">$@destination.price</span>
-                                            <a href="#" class="btn btn-sm btn-outline-primary">View Details</a>
+                                            <div class="mt-auto text-center">
+                                                @Html.ActionLink("View Details 🍂", "Details", "Destination", new { id = destination.dest_id }, new { @class = "btn btn-autumn btn-sm" })
+                                            </div>                                        
                                         </div>
                                     </div>
                                 </div>

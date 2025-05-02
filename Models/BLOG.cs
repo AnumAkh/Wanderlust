@@ -25,8 +25,6 @@ namespace Wanderlust.Models
         public string title { get; set; }
         public string content { get; set; }
         public System.DateTime publication_date { get; set; }
-        public Nullable<int> likes { get; set; }
-        public Nullable<int> dislikes { get; set; }
     
         public virtual AUTHOR AUTHOR { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

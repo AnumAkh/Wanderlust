@@ -1,38 +1,73 @@
 ﻿@model IEnumerable<Wanderlust.Models.WISHLIST>
-
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "My Wishlist";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 style="color: #ff7f50;"><i class="bi bi-heart-fill text-danger me-2"></i>My Wishlist</h2>
+    </div>
 
-<
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.DESTINATION.destName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.USER.email)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
+    @if (TempData["SuccessMessage"] != null)
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DESTINATION.destName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.USER.email)
-            </td>
-            <td>
-                @Html.ActionLink("Details", "Details", new { id = item.item_id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.item_id })
-            </td>
-        </tr>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
     }
 
-</table>
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            <p class="mb-0">Your wishlist is empty. Browse our <a href="@Url.Action("Index", "Destination")" class="alert-link">destinations</a> to add some!</p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow border-0" style="background-color: #fff5f0;">
+                        <div class="position-relative">
+                            <img src="~/@item.DESTINATION.image" class="card-img-top" alt="@item.DESTINATION.destName"
+                                 style="height: 200px; object-fit: cover; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
+                            <div class="position-absolute top-0 end-0 p-2">
+                                @using (Html.BeginForm("Delete", "Wishlist", new { id = item.item_id }, FormMethod.Post, new { @class = "d-inline" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-danger btn-sm"
+                                            onclick="return confirm('Are you sure you want to remove this from your wishlist?');">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-center" style="color: #d2691e;">@item.DESTINATION.destName</h5>
+
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-info">$@item.DESTINATION.price</span>
+
+                            </div>
+
+                            <p class="card-text flex-grow-1">
+                                @(item.DESTINATION.description != null && item.DESTINATION.description.Length > 100
+                                    ? item.DESTINATION.description.Substring(0, 100) + "..."
+                                    : item.DESTINATION.description)
+                            </p>
+
+                            <div class="d-grid gap-2">
+                                <a href="@Url.Action("Details", "Destination", new { id = item.dest_id })" class="btn btn-autumn">
+                                    <i class="bi bi-eye me-1"></i> View Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

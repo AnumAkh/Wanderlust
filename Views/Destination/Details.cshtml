@@ -44,10 +44,20 @@
                     <h4>About this destination</h4>
                     <p class="lead">@Model.Destination.description</p>
 
-                    <div class="mt-4">
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#itineraryModal">
+                    <div class="d-flex align-items-center mt-4">
+                        <button type="submit" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#itineraryModal">
                             <i class="bi bi-plus-circle"></i> Add to Itinerary
                         </button>
+
+                        @if (Session["UserID"] != null)
+                        {
+                            <button type="button" class="btn btn-outline-danger add-to-wishlist"
+                                    data-id="@Model.Destination.dest_id"
+                                    data-url="@Url.Action("AddToWishlist", "Wishlist", new { id = Model.Destination.dest_id })"
+                                    title="Add to Wishlist">
+                                <i class="bi bi-heart"></i> Add to Wishlist
+                            </button>
+                        }
                     </div>
                 </div>
             </div>

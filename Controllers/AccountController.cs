@@ -30,29 +30,49 @@ namespace Wanderlust.Controllers
             if (ModelState.IsValid)
             {
                 // Find the user by email
-                var user = _context.USERs.FirstOrDefault(u => u.email == model.Email);
-
-                // Check if user exists and password matches (no hashing)
-                if (user != null && user.password == model.Password)
+                var b_user = _context.AUTHORs.FirstOrDefault(a => a.email == model.Email);
+                if (b_user != null)
                 {
-                    // Create auth cookie
-                    FormsAuthentication.SetAuthCookie(user.email, model.RememberMe);
+                    Session["AuthorId"] = b_user.author_id;
+                    Session["AuthorEmail"] = b_user.email;
+                    Session["AuthorName"] = b_user.firstName + " " + b_user.lastName;
+                    Session["Role"] = "Author";
 
-                    // Store user info in session
-                    Session["UserId"] = user.userID;
-                    Session["UserEmail"] = user.email;
-                    Session["UserName"] = user.firstName + " " + user.lastName;
-
-                    // Redirect to returnUrl or default page
                     if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
                         && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
                     {
                         return Redirect(returnUrl);
                     }
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Blog");
                 }
+                else
+                {
+                    var user = _context.USERs.FirstOrDefault(u => u.email == model.Email);
 
-                ModelState.AddModelError("", "Invalid email or password");
+                    // Check if user exists and password matches (no hashing)
+                    if (user != null && user.password == model.Password)
+                    {
+                        // Create auth cookie
+                        FormsAuthentication.SetAuthCookie(user.email, model.RememberMe);
+
+                        // Store user info in session
+                        Session["UserId"] = user.userID;
+                        Session["UserEmail"] = user.email;
+                        Session["UserName"] = user.firstName + " " + user.lastName;
+                        Session["Role"] = "User";
+
+
+                        // Redirect to returnUrl or default page
+                        if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
+                            && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
+                        {
+                            return Redirect(returnUrl);
+                        }
+                        return RedirectToAction("Index", "Home");
+                    }
+
+                    ModelState.AddModelError("", "Invalid email or password");
+                }
             }
 
             return View(model);
@@ -85,7 +105,8 @@ namespace Wanderlust.Controllers
                     password = model.Password,
                     firstName = model.FirstName,
                     lastName = model.LastName,
-                    // Set other properties as needed
+                    ph_num = model.phNum,
+                    addr = model.address
                 };
 
                 _context.USERs.Add(user);
@@ -97,6 +118,7 @@ namespace Wanderlust.Controllers
                 Session["UserId"] = user.userID;
                 Session["UserEmail"] = user.email;
                 Session["UserName"] = user.firstName + " " + user.lastName;
+                Session["Role"] = "User";
 
                 return RedirectToAction("Index", "Home");
             }

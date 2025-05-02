@@ -1,12 +1,12 @@
 ﻿@model Wanderlust.Models.BLOG
 
 @{
-    ViewBag.Title = "Edit Blog";
+    ViewBag.Title = "Create Blog";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="container my-5">
-    <h2 style="color: #ff7f50;">Edit Blog</h2>
+    <h2 style="color: #ff7f50;">Create New Blog</h2>
 
     @using (Html.BeginForm())
     {
@@ -15,7 +15,6 @@
         <div class="card shadow-sm border-0">
             <div class="card-body p-4">
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                @Html.HiddenFor(model => model.blog_id)
 
                 @* Use a hidden field for author_id instead of a dropdown *@
                 @Html.HiddenFor(model => model.author_id)
@@ -32,15 +31,13 @@
                     @Html.ValidationMessageFor(model => model.content, "", new { @class = "text-danger" })
                 </div>
 
-                <div class="mb-3">
-                    @Html.LabelFor(model => model.publication_date, new { @class = "form-label" })
-                    @Html.EditorFor(model => model.publication_date, new { htmlAttributes = new { @class = "form-control", type = "datetime-local" } })
-                    @Html.ValidationMessageFor(model => model.publication_date, "", new { @class = "text-danger" })
-                </div>
+                @* Hidden fields for automatic values *@
+                @Html.HiddenFor(model => model.publication_date)
+
 
                 <div class="mt-4">
                     <button type="submit" class="btn btn-autumn">
-                        <i class="bi bi-save"></i> Save Changes
+                        <i class="bi bi-journal-plus"></i> Publish Blog
                     </button>
                     <a href="@Url.Action("Index", "Blog")" class="btn btn-outline-secondary ms-2">
                         <i class="bi bi-x-circle"></i> Cancel
