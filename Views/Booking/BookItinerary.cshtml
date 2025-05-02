@@ -1,0 +1,278 @@
+﻿@model Wanderlust.ViewModel.BookItineraryViewModel
+@{
+    ViewBag.Title = "Book Itinerary";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Home</a></li>
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Itinerary")">My Itineraries</a></li>
+                    <li class="breadcrumb-item"><a href="@Url.Action("Details", "Itinerary", new { id = Model.ItineraryId })">@Model.ItineraryName</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Book Now</li>
+                </ol>
+            </nav>
+            <h1 class="display-5 fw-bold text-primary">Book Your Itinerary</h1>
+            <p class="lead text-muted">Complete your booking for @Model.ItineraryName</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Booking Form -->
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0"><i class="bi bi-calendar-check me-2"></i>Booking Details</h5>
+                </div>
+                <div class="card-body">
+                    @using (Html.BeginForm("BookItinerary", "Booking", FormMethod.Post, new { @class = "needs-validation", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
+                        @Html.HiddenFor(model => model.ItineraryId)
+                        @Html.HiddenFor(model => model.ItineraryName)
+                        @Html.HiddenFor(model => model.ItineraryPrice)
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.TravelStartDate, new { @class = "form-label" })
+                                    @Html.TextBoxFor(model => model.TravelStartDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", min = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd") })
+                                    @Html.ValidationMessageFor(model => model.TravelStartDate, "", new { @class = "text-danger" })
+                                    <small class="form-text text-muted">Select your departure date</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.TravelEndDate, new { @class = "form-label" })
+                                    @Html.TextBoxFor(model => model.TravelEndDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", min = DateTime.Now.AddDays(2).ToString("yyyy-MM-dd") })
+                                    @Html.ValidationMessageFor(model => model.TravelEndDate, "", new { @class = "text-danger" })
+                                    <small class="form-text text-muted">Select your return date</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.NumTravelers, new { @class = "form-label" })
+                                <div class="input-group">
+                                    <button type="button" class="btn btn-outline-secondary" id="decreaseTravelers">
+                                        <i class="bi bi-dash"></i>
+                                    </button>
+                                    @Html.TextBoxFor(model => model.NumTravelers, new { @class = "form-control text-center", min = "1", max = "10" })
+                                    <button type="button" class="btn btn-outline-secondary" id="increaseTravelers">
+                                        <i class="bi bi-plus"></i>
+                                    </button>
+                                </div>
+                                @Html.ValidationMessageFor(model => model.NumTravelers, "", new { @class = "text-danger" })
+                                <small class="form-text text-muted">Number of people traveling (max 10)</small>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.SpecialRequests, new { @class = "form-label" })
+                                @Html.TextAreaFor(model => model.SpecialRequests, new { @class = "form-control", rows = "3", placeholder = "Any special accommodations, dietary requirements, or preferences..." })
+                                @Html.ValidationMessageFor(model => model.SpecialRequests, "", new { @class = "text-danger" })
+                                <small class="form-text text-muted">Optional: Let us know if you have any special requests</small>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="termsCheck" required>
+                                <label class="form-check-label" for="termsCheck">
+                                    I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Terms and Conditions</a>
+                                </label>
+                                <div class="invalid-feedback">
+                                    You must agree to the terms before proceeding.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-check-circle me-2"></i>Book Now
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Sidebar -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm sticky-top" style="top: 2rem; z-index: 100;">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0"><i class="bi bi-info-circle me-2"></i>Booking Summary</h5>
+                </div>
+                <div class="card-body">
+                    <h5 class="mb-3">@Model.ItineraryName</h5>
+
+                    <div class="mb-3">
+                        <h6 class="mb-2">Included Destinations:</h6>
+                        <ul class="list-group list-group-flush">
+                            @foreach (var dest in Model.Destinations)
+                            {
+                                <li class="list-group-item px-0 py-2 border-dashed">
+                                    <div class="d-flex justify-content-between">
+                                        <span>@dest.destName</span>
+                                        <span class="text-primary">$@dest.price.ToString("N2")</span>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+
+                    <hr class="my-3">
+
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Base Price:</span>
+                            <span>$@Model.ItineraryPrice.ToString("N2")</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Number of Travelers:</span>
+                            <span id="travelerCount">@Model.NumTravelers</span>
+                        </div>
+                    </div>
+
+                    <div class="p-3 bg-light rounded">
+                        <div class="d-flex justify-content-between">
+                            <h5 class="mb-0">Total:</h5>
+                            <h5 class="mb-0 text-primary" id="totalCost">$@Model.TotalCost.ToString("N2")</h5>
+                        </div>
+                        <small class="text-muted">Includes all taxes and fees</small>
+                    </div>
+                </div>
+                <div class="card-footer bg-white">
+                    <p class="small text-muted mb-0">
+                        <i class="bi bi-shield-check text-success me-1"></i>Secure payment processing
+                    </p>
+                    <p class="small text-muted mb-0">
+                        <i class="bi bi-clock-history text-success me-1"></i>Free cancellation up to 7 days before departure
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Terms and Conditions Modal -->
+<div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="termsModalLabel">Terms and Conditions</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6>Booking Terms</h6>
+                <p>By booking this itinerary, you agree to the following terms and conditions:</p>
+                <ul>
+                    <li>A 20% deposit is required at the time of booking.</li>
+                    <li>Full payment is due 30 days prior to departure.</li>
+                    <li>Cancellations made more than 7 days before departure are eligible for a full refund.</li>
+                    <li>Cancellations made within 7 days of departure may incur a cancellation fee.</li>
+                    <li>Changes to your booking may be subject to change fees.</li>
+                    <li>All travelers must have valid travel documents and insurance.</li>
+                </ul>
+                <h6>Travel Insurance</h6>
+                <p>We strongly recommend purchasing comprehensive travel insurance to protect against unexpected events.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">I Understand</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Initialize form validation
+            (function () {
+                'use strict'
+                var forms = document.querySelectorAll('.needs-validation')
+                Array.prototype.slice.call(forms)
+                    .forEach(function (form) {
+                        form.addEventListener('submit', function (event) {
+                            if (!form.checkValidity()) {
+                                event.preventDefault()
+                                event.stopPropagation()
+                            }
+                            form.classList.add('was-validated')
+                        }, false)
+                    })
+            })()
+
+            // Handle date validation
+            $("#TravelStartDate").on("change", function () {
+                var startDate = new Date($(this).val());
+                startDate.setDate(startDate.getDate() + 1);
+
+                var formattedDate = startDate.toISOString().split('T')[0];
+                $("#TravelEndDate").attr("min", formattedDate);
+
+                // If end date is before start date, update it
+                var endDate = new Date($("#TravelEndDate").val());
+                if (endDate <= new Date($(this).val())) {
+                    $("#TravelEndDate").val(formattedDate);
+                }
+
+                updateTotalCost();
+            });
+
+            $("#TravelEndDate").on("change", function () {
+                updateTotalCost();
+            });
+
+            // Handle traveler count buttons
+            $("#decreaseTravelers").click(function () {
+                var count = parseInt($("#NumTravelers").val());
+                if (count > 1) {
+                    $("#NumTravelers").val(count - 1);
+                    $("#travelerCount").text(count - 1);
+                    updateTotalCost();
+                }
+            });
+
+            $("#increaseTravelers").click(function () {
+                var count = parseInt($("#NumTravelers").val());
+                if (count < 10) {
+                    $("#NumTravelers").val(count + 1);
+                    $("#travelerCount").text(count + 1);
+                    updateTotalCost();
+                }
+            });
+
+            $("#NumTravelers").on("change", function () {
+                var count = parseInt($(this).val());
+                if (isNaN(count) || count < 1) {
+                    $(this).val(1);
+                    count = 1;
+                } else if (count > 10) {
+                    $(this).val(10);
+                    count = 10;
+                }
+                $("#travelerCount").text(count);
+                updateTotalCost();
+            });
+
+            // Update total cost calculation
+            function updateTotalCost() {
+                var basePrice = @Model.ItineraryPrice;
+                var travelers = parseInt($("#NumTravelers").val());
+                var totalCost = basePrice * travelers;
+
+                $("#totalCost").text("$" + totalCost.toFixed(2));
+            }
+
+            // Add custom border style
+            $("<style>.border-dashed{border-style:dashed !important;border-width:1px !important;border-color:#dee2e6 !important;}</style>").appendTo("head");
+        });
+    </script>
+}

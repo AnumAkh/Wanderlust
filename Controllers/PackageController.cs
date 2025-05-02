@@ -18,7 +18,7 @@ namespace Wanderlust.Controllers
         // GET: Package
         public ActionResult Index()
         {
-            return View(db.Packages.ToList());
+            return View(db.PACKAGEs.ToList());
         }
 
         // GET: Package/Details/5
@@ -30,7 +30,7 @@ namespace Wanderlust.Controllers
             }
 
             // Retrieve the package based on the id
-            PACKAGE package = db.Packages.Find(id);
+            PACKAGE package = db.PACKAGEs.Find(id);
             if (package == null)
             {
                 return HttpNotFound();

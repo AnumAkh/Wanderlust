@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Wanderlust.Models.REVIEW>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.rating)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.content)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.review_date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DESTINATION.destName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.USER.email)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.rating)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.content)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.review_date)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DESTINATION.destName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.USER.email)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.review_id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.review_id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.review_id })
+        </td>
+    </tr>
+}
+
+</table>

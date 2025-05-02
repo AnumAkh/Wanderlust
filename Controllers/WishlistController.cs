@@ -14,11 +14,25 @@ namespace Wanderlust.Controllers
     {
         private WanderlustEntities db = new WanderlustEntities();
 
-        // GET: Wishlist
+
         public ActionResult Index()
         {
-            var wISHLISTs = db.WISHLISTs.Include(w => w.DESTINATION).Include(w => w.USER);
-            return View(wISHLISTs.ToList());
+
+            if (Session["UserId"] == null)
+            {
+                TempData["ErrorMessage"] = "Please login to view your wishlist.";
+                return RedirectToAction("Login", "Account");
+            }
+
+            int userId = Convert.ToInt32(Session["UserId"]);
+
+
+            var userWishlist = db.WISHLISTs
+                .Include(w => w.DESTINATION)
+                .Where(w => w.user_id == userId)
+                .ToList();
+
+            return View(userWishlist);
         }
 
         // GET: Wishlist/Details/5
@@ -37,30 +51,41 @@ namespace Wanderlust.Controllers
         }
 
         // GET: Wishlist/Create
-        public ActionResult Create()
+        // GET: Wishlist/AddToWishlist/5
+        public ActionResult AddToWishlist(int id)
         {
-            ViewBag.dest_id = new SelectList(db.DESTINATIONs, "dest_id", "destName");
-            ViewBag.user_id = new SelectList(db.USERs, "userID", "email");
-            return View();
-        }
-
-        // POST: Wishlist/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "item_id,dest_id,user_id")] WISHLIST wISHLIST)
-        {
-            if (ModelState.IsValid)
+            if (Session["UserId"] == null)
             {
-                db.WISHLISTs.Add(wISHLIST);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                TempData["ErrorMessage"] = "Please login to add items to your wishlist.";
+                return RedirectToAction("Login", "Account");
             }
 
-            ViewBag.dest_id = new SelectList(db.DESTINATIONs, "dest_id", "destName", wISHLIST.dest_id);
-            ViewBag.user_id = new SelectList(db.USERs, "userID", "email", wISHLIST.user_id);
-            return View(wISHLIST);
+            int userId = Convert.ToInt32(Session["UserId"]);
+
+            // Check if this destination is already in the user's wishlist
+            var existingWishlist = db.WISHLISTs.FirstOrDefault(w => w.dest_id == id && w.user_id == userId);
+
+            if (existingWishlist == null)
+            {
+                // Create new wishlist item
+                var wishlist = new WISHLIST
+                {
+                    dest_id = id,
+                    user_id = userId
+                };
+
+                db.WISHLISTs.Add(wishlist);
+                db.SaveChanges();
+
+                TempData["SuccessMessage"] = "Added to Wishlist!";
+            }
+            else
+            {
+                TempData["InfoMessage"] = "This item is already in your wishlist.";
+            }
+
+            // Return to the previous page
+            return Redirect(Request.UrlReferrer.ToString());
         }
 
 

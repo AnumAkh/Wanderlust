@@ -1,0 +1,200 @@
+﻿@model List<Wanderlust.Models.ITINERARY>
+@{
+    ViewBag.Title = "My Itineraries";
+    var sessionDestinations = ViewBag.SessionDestinations as List<Wanderlust.Models.DESTINATION>;
+    decimal sessionTotalPrice = sessionDestinations != null ? sessionDestinations.Sum(d => d.price) : 0;
+}
+
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-4 text-primary">My Itineraries</h1>
+            <p class="lead text-muted">Manage your travel plans and saved destinations</p>
+        </div>
+    </div>
+
+    <style>
+        .list-group-item {
+            transition: all 0.3s ease;
+        }
+
+        .card {
+            transition: transform 0.3s ease;
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+            }
+    </style>
+
+    <!-- Current Temporary Itinerary Section -->
+    <div class="mb-5">
+        <h2 class="mb-4">Current Itinerary <small class="text-muted">(Not saved yet)</small></h2>
+
+        @if (sessionDestinations != null && sessionDestinations.Any())
+        {
+            <div class="row mb-5">
+                <div class="col-lg-8">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white">
+                            <h5 class="card-title mb-0">Selected Destinations</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="list-group list-group-flush">
+                                @foreach (var dest in sessionDestinations)
+                                {
+                                    <div class="list-group-item">
+                                        <div class="d-flex align-items-center">
+                                            @if (!string.IsNullOrEmpty(dest.image))
+                                            {
+                                                <div class="flex-shrink-0 me-3">
+                                                    <img src="@Url.Content("~/"+dest.image)" alt="@dest.destName" class="rounded" style="width: 80px; height: 60px; object-fit: cover;" />
+                                                </div>
+                                            }
+                                            <div class="flex-grow-1">
+                                                <h5 class="mb-1">@dest.destName</h5>
+                                                <p class="mb-0 text-muted small">@(dest.description != null ? (dest.description.Length > 100 ? dest.description.Substring(0, 100) + "..." : dest.description) : "")</p>
+                                            </div>
+                                            <div class="flex-shrink-0 ms-3 text-end">
+                                                <span class="badge bg-primary rounded-pill">$@dest.price.ToString("N2")</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-muted">Total destinations: @sessionDestinations.Count</span>
+                                <span class="fw-bold">Total: $@sessionTotalPrice.ToString("N2")</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white">
+                            <h5 class="card-title mb-0">Save Your Itinerary</h5>
+                        </div>
+                        <div class="card-body">
+                            @using (Html.BeginForm("Book", "Itinerary", FormMethod.Post, new { @class = "needs-validation", role = "form" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <div class="mb-3">
+                                    <label for="itineraryName" class="form-label">Itinerary Name</label>
+                                    <input type="text" class="form-control" id="itineraryName" name="itineraryName" required
+                                           placeholder="e.g., Summer Vacation 2025" />
+                                    <div class="form-text">Give your itinerary a memorable name</div>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    Save Itinerary
+                                </button>
+                            }
+                        </div>
+                        <div class="card-footer bg-white">
+                            <p class="mb-0 small text-muted">By saving, you're creating a permanent itinerary in your account.</p>
+                        </div>
+                    </div>
+
+                    <div class="card mt-3 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Need More Destinations?</h5>
+                            <p class="card-text">Explore our catalog to discover more exciting places for your trip.</p>
+                            <a href="@Url.Action("Index", "Destination")" class="btn btn-outline-primary w-100">
+                                Browse Destinations
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row justify-content-center mb-5">
+                <div class="col-md-8 text-center">
+                    <div class="card shadow-sm border-0 p-5">
+                        <div class="card-body">
+                            <h3>Your current itinerary is empty</h3>
+                            <p class="text-muted mb-4">Start building your dream trip by adding destinations to your itinerary.</p>
+                            <a href="@Url.Action("Index", "Destination")" class="btn btn-primary btn-lg">
+                                Explore Destinations
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Saved Itineraries Section -->
+    <div>
+        <h2 class="mb-4">Saved Itineraries</h2>
+
+        @if (Model != null && Model.Any())
+        {
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                @foreach (var itinerary in Model)
+                {
+                    <div class="col">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-header bg-white">
+                                <h5 class="card-title mb-0">@itinerary.itinerary_name</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">
+                                    <span class="badge bg-light text-dark mb-2">Itinerary #@itinerary.itinerary_id</span>
+                                </p>
+
+                                @{
+                                    var destinations = itinerary.ITINERARY_DESTINATION.Select(id => id.DESTINATION).ToList();
+                                    var destinationCount = destinations.Count;
+                                }
+
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span class="text-muted">Destinations:</span>
+                                    <span>@destinationCount</span>
+                                </div>
+
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted">Total Cost:</span>
+                                    <span class="fw-bold text-primary">$@itinerary.price.ToString("N2")</span>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-white border-top">
+                                <a href="@Url.Action("Details", new { id = itinerary.itinerary_id })" class="btn btn-outline-primary w-100">
+                                    View Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="row justify-content-center">
+                <div class="col-md-8 text-center">
+                    <div class="card shadow-sm border-0 p-5">
+                        <div class="card-body">
+                            <h3>No saved itineraries yet</h3>
+                            <p class="text-muted mb-4">Save your current itinerary or create new ones to see them here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('.list-group-item').each(function (i) {
+            $(this).delay(100 * i).animate({ opacity: 1 }, 500);
+        });
+
+        $('.card').each(function (i) {
+            $(this).delay(50 * i).animate({ opacity: 1 }, 300);
+        });
+    });
+</script>

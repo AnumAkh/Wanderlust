@@ -22,25 +22,29 @@ namespace Wanderlust.Controllers
         }
 
         // GET: Destination/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            DESTINATION dESTINATION = db.DESTINATIONs.Find(id);
-            if (dESTINATION == null)
+            var destination = db.DESTINATIONs.Find(id);
+
+            if (destination == null)
             {
                 return HttpNotFound();
-
             }
+
+            var reviews = db.REVIEWs
+                .Where(r => r.dest_id == id)
+                .OrderByDescending(r => r.review_date)
+                .ToList();
+
             var viewModel = new DestinationDetailsViewModel
             {
-
-                Destination = dESTINATION
+                Destination = destination,
+                Reviews = reviews
             };
+
             return View(viewModel);
         }
+
 
     }
 }

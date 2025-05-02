@@ -1,0 +1,335 @@
+﻿@model Wanderlust.ViewModel.UserDashboardViewModel
+@{
+    ViewBag.Title = "My Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-4">
+    <!-- Profile Header -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+                <div class="card-body p-0">
+                    <div class="row g-0">
+                        <div class="col-md-4 bg-autumn d-flex align-items-center justify-content-center py-4">
+                            <div class="text-center">
+                                <div class="avatar-circle mx-auto mb-3 bg-white">
+                                    <span class="avatar-initials">@Model.User.firstName[0]@Model.User.lastName[0]</span>
+                                </div>
+                                <h4 class="text-white mb-0">@Model.User.firstName @Model.User.lastName</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-8 p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h3 class="mb-0">My Profile</h3>
+                                <a href="@Url.Action("Edit", "Account")" class="btn btn-sm btn-outline-autumn">
+                                    <i class="bi bi-pencil-fill"></i> Edit Profile
+                                </a>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p class="mb-2">
+                                        <i class="bi bi-envelope text-muted me-2"></i>
+                                        @Model.User.email
+                                    </p>
+                                    <p class="mb-2">
+                                        <i class="bi bi-telephone text-muted me-2"></i>
+                                        @(string.IsNullOrEmpty(Model.User.ph_num) ? "Not provided" : Model.User.ph_num)
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="mb-2">
+                                        <i class="bi bi-geo-alt text-muted me-2"></i>
+                                        @(string.IsNullOrEmpty(Model.User.addr) ?
+                                            "No location provided" : $"{Model.User.addr}")
+                                    </p>
+                                    <p class="mb-2">
+                                        <i class="bi bi-lock text-muted me-2"></i>
+                                        <a href="@Url.Action("ChangePassword", "UserProfile")" class="text-decoration-none">Change Password</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Trip Statistics -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h4 class="mb-3"><i class="bi bi-graph-up text-autumn me-2"></i>Travel Statistics</h4>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="stat-circle bg-light mx-auto mb-2 d-flex align-items-center justify-content-center">
+                        <i class="bi bi-airplane text-primary"></i>
+                    </div>
+                    <h2 class="mb-1">@Model.TotalBookings</h2>
+                    <p class="text-muted mb-0">Total Bookings</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="stat-circle bg-light mx-auto mb-2 d-flex align-items-center justify-content-center">
+                        <i class="bi bi-hourglass-split text-warning"></i>
+                    </div>
+                    <h2 class="mb-1">@Model.PendingBookings</h2>
+                    <p class="text-muted mb-0">Pending</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="stat-circle bg-light mx-auto mb-2 d-flex align-items-center justify-content-center">
+                        <i class="bi bi-calendar-check text-success"></i>
+                    </div>
+                    <h2 class="mb-1">@Model.ConfirmedBookings</h2>
+                    <p class="text-muted mb-0">Confirmed</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="stat-circle bg-light mx-auto mb-2 d-flex align-items-center justify-content-center">
+                        <i class="bi bi-x-square-fill text-info"></i>
+                    </div>
+                    <h2 class="mb-1">@Model.CancelledBookings</h2>
+                    <p class="text-muted mb-0">Cancelled Bookings</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upcoming Trips and Recent Bookings -->
+    <div class="row mb-4">
+        <!-- Upcoming Trips -->
+        <div class="col-md-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-airplane-engines text-autumn me-2"></i>Upcoming Trips</h5>
+                    <a href="@Url.Action("UserBookings", "Booking")" class="btn btn-sm btn-outline-secondary">View All</a>
+                </div>
+                <div class="card-body p-0">
+                    @if (Model.UpcomingTrips.Any())
+                    {
+                        <div class="list-group list-group-flush">
+                            @foreach (var trip in Model.UpcomingTrips)
+                            {
+                                <div class="list-group-item p-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1">
+                                                @(trip.bk_type.ToLower() == "dest" ? "Destination" :
+                                                  trip.bk_type.ToLower() == "pkg" ? "Package" :
+                                                  trip.bk_type.ToLower() == "itinerary" ? "Itinerary" :
+                                                  trip.bk_type)
+                                            </h6>
+                                            <p class="text-muted small mb-0">
+                                                <i class="bi bi-calendar me-1"></i>
+                                                @trip.travel_start_date.ToString("MMM dd") - @trip.travel_end_date.ToString("MMM dd, yyyy")
+                                            </p>
+                                        </div>
+                                        <div class="text-end">
+                                            <span class="badge bg-success mb-1 d-block">Confirmed</span>
+                                            <small class="text-muted">
+                                                In @((trip.travel_start_date - DateTime.Now).Days) days
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="bi bi-calendar-x text-muted" style="font-size: 2rem;"></i>
+                            <p class="mt-2 mb-0 text-muted">No upcoming trips</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Bookings -->
+        <div class="col-md-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-clock-history text-autumn me-2"></i>Recent Bookings</h5>
+                    <a href="@Url.Action("UserBookings", "Booking")" class="btn btn-sm btn-outline-secondary">View All</a>
+                </div>
+                <div class="card-body p-0">
+                    @if (Model.RecentBookings.Any())
+                    {
+                        <div class="list-group list-group-flush">
+                            @foreach (var booking in Model.RecentBookings)
+                            {
+                                <div class="list-group-item p-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1">
+                                                @(booking.bk_type.ToLower() == "dest" ? "Destination" :
+                                                  booking.bk_type.ToLower() == "pkg" ? "Package" :
+                                                  booking.bk_type.ToLower() == "itinerary" ? "Itinerary" :
+                                                  booking.bk_type)
+                                            </h6>
+                                            <p class="text-muted small mb-0">
+                                                <i class="bi bi-calendar me-1"></i>
+                                                Booked on @booking.bk_date.ToString("MMM dd, yyyy")
+                                            </p>
+                                        </div>
+                                        <div class="text-end">
+                                            <span class="badge bg-@(booking.status.ToLower() == "confirmed" ? "success" :
+                                                                  booking.status.ToLower() == "pending" ? "warning" :
+                                                                  booking.status.ToLower() == "cancelled" ? "danger" :
+                                                                  "secondary") mb-1 d-block">
+                                                @booking.status
+                                            </span>
+                                            <small class="text-primary">$@booking.bk_cost.ToString("0.00")</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="bi bi-bookmark-x text-muted" style="font-size: 2rem;"></i>
+                            <p class="mt-2 mb-0 text-muted">No bookings yet</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Reviews -->
+    <div class="row">
+        <div class="col-12 mb-3">
+            <h4><i class="bi bi-star text-autumn me-2"></i>My Reviews</h4>
+        </div>
+        @if (Model.RecentReviews.Any())
+        {
+            foreach (var review in Model.RecentReviews)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="me-auto">
+                                    <h6 class="mb-0">Destination #@review.dest_id</h6>
+                                    <small class="text-muted">@review.review_date.ToString("MMMM dd, yyyy")</small>
+                                </div>
+                                <div class="star-rating">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        if (i <= review.rating)
+                                        {
+                                            <i class="bi bi-star-fill text-warning"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-star text-muted"></i>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                            <p class="card-text">@(review.content.Length > 100 ? review.content.Substring(0, 100) + "..." : review.content)</p>
+                            <a href="@Url.Action("Details", "Destination", new { id = review.dest_id })" class="btn btn-sm btn-outline-primary">
+                                View Destination
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center py-5">
+                        <i class="bi bi-chat-square text-muted" style="font-size: 2rem;"></i>
+                        <p class="mt-2 mb-0 text-muted">You haven't written any reviews yet</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .bg-autumn {
+        background-color: #d2691e;
+    }
+
+    .text-autumn {
+        color: #d2691e;
+    }
+
+    .btn-autumn {
+        background-color: #d2691e;
+        border-color: #d2691e;
+        color: white;
+    }
+
+        .btn-autumn:hover {
+            background-color: #b35a1a;
+            border-color: #b35a1a;
+            color: white;
+        }
+
+    .btn-outline-autumn {
+        color: #d2691e;
+        border-color: #d2691e;
+    }
+
+        .btn-outline-autumn:hover {
+            background-color: #d2691e;
+            color: white;
+        }
+
+    .avatar-circle {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .avatar-initials {
+        font-size: 2.5rem;
+        color: #d2691e;
+        font-weight: bold;
+    }
+
+    .stat-circle {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .stat-circle i {
+            font-size: 1.8rem;
+        }
+</style>

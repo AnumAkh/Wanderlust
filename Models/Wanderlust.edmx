@@ -32,13 +32,13 @@
             <PropertyRef Name="booking_id" />
           </Key>
           <Property Name="booking_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="bk_date" Type="date" Nullable="false" />
+          <Property Name="bk_date" Type="datetime" Nullable="false" />
           <Property Name="status" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="user_id" Type="int" Nullable="false" />
-          <Property Name="bk_type" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="bk_type" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="trip_id" Type="int" Nullable="false" />
-          <Property Name="travel_start_date" Type="date" Nullable="false" />
-          <Property Name="travel_end_date" Type="date" Nullable="false" />
+          <Property Name="travel_start_date" Type="datetime" Nullable="false" />
+          <Property Name="travel_end_date" Type="datetime" Nullable="false" />
           <Property Name="numtravelers" Type="int" Nullable="false" />
           <Property Name="bk_cost" Type="decimal" Precision="10" Scale="2" Nullable="false" />
         </EntityType>
@@ -69,6 +69,7 @@
           <Property Name="itinerary_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="user_id" Type="int" Nullable="false" />
           <Property Name="price" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="itinerary_name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="ITINERARY_DESTINATION">
           <Key>
@@ -438,13 +439,13 @@
             <PropertyRef Name="booking_id" />
           </Key>
           <Property Name="booking_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="bk_date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="bk_date" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="status" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="user_id" Type="Int32" Nullable="false" />
-          <Property Name="bk_type" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="bk_type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="trip_id" Type="Int32" Nullable="false" />
-          <Property Name="travel_start_date" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="travel_end_date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="travel_start_date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="travel_end_date" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="numtravelers" Type="Int32" Nullable="false" />
           <Property Name="bk_cost" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
           <NavigationProperty Name="USER" Relationship="Self.FK_BOOKING_USER" FromRole="BOOKING" ToRole="USER" />
@@ -485,6 +486,7 @@
           <Property Name="price" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
           <NavigationProperty Name="ITINERARY_DESTINATION" Relationship="Self.FK_ITINERARY_DESTINATION_ITINERARY" FromRole="ITINERARY" ToRole="ITINERARY_DESTINATION" />
           <NavigationProperty Name="USER" Relationship="Self.FK_ITINERARY_USER" FromRole="ITINERARY" ToRole="USER" />
+          <Property Name="itinerary_name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="ITINERARY_DESTINATION">
           <Key>
@@ -906,6 +908,7 @@
           <EntitySetMapping Name="ITINERARies">
             <EntityTypeMapping TypeName="WanderlustModel.ITINERARY">
               <MappingFragment StoreEntitySet="ITINERARY">
+                <ScalarProperty Name="itinerary_name" ColumnName="itinerary_name" />
                 <ScalarProperty Name="itinerary_id" ColumnName="itinerary_id" />
                 <ScalarProperty Name="user_id" ColumnName="user_id" />
                 <ScalarProperty Name="price" ColumnName="price" />

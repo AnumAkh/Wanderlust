@@ -23,6 +23,7 @@ namespace Wanderlust.Models
         public int itinerary_id { get; set; }
         public int user_id { get; set; }
         public decimal price { get; set; }
+        public string itinerary_name { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ITINERARY_DESTINATION> ITINERARY_DESTINATION { get; set; }

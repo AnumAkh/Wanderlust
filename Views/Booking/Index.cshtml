@@ -1,17 +1,198 @@
 ﻿@model IEnumerable<Wanderlust.Models.BOOKING>
-
 @{
     ViewBag.Title = "Your Bookings";
 }
 
-<h2>Your Bookings</h2>
-
-@foreach (var booking in Model)
-{
-    <div class="booking-item">
-        <h3>@booking.bk_type - @booking.bk_date.ToString("MM/dd/yyyy")</h3>
-        <p>Status: @booking.status</p>
-        <p>Cost: @booking.bk_cost</p>
-        <p><a href="@Url.Action("Details", "Booking", new { id = booking.booking_id })">View Details</a></p>
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="mb-0"><i class="bi bi-briefcase-fill text-autumn me-2"></i>Your Travel Bookings</h2>
+                <a href="@Url.Action("Index", "Destination")" class="btn btn-outline-autumn">
+                    <i class="bi bi-plus-circle"></i> Book New Trip
+                </a>
+            </div>
+            <hr class="mt-3 mb-4" style="height: 2px; background: linear-gradient(to right, #d2691e, transparent);">
+        </div>
     </div>
-}
+
+    @if (!Model.Any())
+    {
+        <div class="row">
+            <div class="col">
+                <div class="card border-0 shadow-sm rounded-3">
+                    <div class="card-body text-center py-5">
+                        <div class="empty-state-icon mb-3">
+                            <i class="bi bi-calendar-x" style="font-size: 4rem; color: #d2691e; opacity: 0.7;"></i>
+                        </div>
+                        <h4 class="mb-3">No Bookings Found</h4>
+                        <p class="text-muted mb-4 mx-auto" style="max-width: 500px;">
+                            You haven't made any travel bookings yet. Explore our destinations and packages to start your next adventure!
+                        </p>
+                        <a href="@Url.Action("Index", "Destination")" class="btn btn-autumn btn-lg px-4">
+                            <i class="bi bi-compass"></i> Discover Destinations
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="booking-stats d-flex text-center">
+                    <div class="stat-box flex-grow-1 bg-light rounded-3 p-3 shadow-sm me-2">
+                        <span class="d-block text-muted small">Total Bookings</span>
+                        <span class="fs-4 fw-bold">@Model.Count()</span>
+                    </div>
+                    <div class="stat-box flex-grow-1 bg-light rounded-3 p-3 shadow-sm me-2">
+                        <span class="d-block text-muted small">Pending</span>
+                        <span class="fs-4 fw-bold text-warning">@Model.Count(b => b.status == "Pending")</span>
+                    </div>
+                    <div class="stat-box flex-grow-1 bg-light rounded-3 p-3 shadow-sm">
+                        <span class="d-block text-muted small">Confirmed</span>
+                        <span class="fs-4 fw-bold text-success">@Model.Count(b => b.status == "Confirmed")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="list-group">
+                    @foreach (var booking in Model)
+                    {
+                        <div class="list-group-item list-group-item-action p-0 mb-3 border rounded-3 overflow-hidden shadow-sm hover-elevate"
+                             style="transition: all 0.2s ease;">
+                            <div class="row g-0">
+                                <div class="col-md-2 d-flex align-items-center justify-content-center p-3"
+                                     style="background-color: @(booking.status.ToLower() == "confirmed" ? "#f8fff8" :
+                                                                booking.status.ToLower() == "pending" ? "#fffdf8" :
+                                                                booking.status.ToLower() == "completed" ? "#fff8f8" : "#f8f9fa")">
+                                    @if (booking.bk_type.ToLower() == "dest")
+                                    {
+                                        <i class="bi bi-geo-alt-fill"
+                                           style="font-size: 2.8rem; color: #3498db; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.1));"></i>
+                                    }
+                                    else if (booking.bk_type.ToLower() == "pkg")
+                                    {
+                                        <i class="bi bi-box2-fill"
+                                           style="font-size: 2.8rem; color: #2ecc71; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.1));"></i>
+                                    }
+                                    else if (booking.bk_type.ToLower() == "itinerary")
+                                    {
+                                        <i class="bi bi-map-fill"
+                                           style="font-size: 2.8rem; color: #e67e22; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.1));"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="bi bi-suitcase-fill"
+                                           style="font-size: 2.8rem; color: #9b59b6; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.1));"></i>
+                                    }
+                                </div>
+                                <div class="col-md-7 p-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h5 class="mb-1 d-flex align-items-center">
+                                                @(booking.bk_type.ToLower() == "dest" ? "Destination" :
+                                                  booking.bk_type.ToLower() == "pkg" ? "Travel Package" :
+                                                  booking.bk_type.ToLower() == "itinerary" ? "Itinerary" : booking.bk_type)
+                                                <span class="ms-2 badge rounded-pill bg-@(booking.status.ToLower() == "confirmed" ? "success" :
+                                                                              booking.status.ToLower() == "pending" ? "warning" :
+                                                                              booking.status.ToLower() == "cancelled" ? "danger" : "secondary")">
+                                                    @booking.status
+                                                </span>
+                                            </h5>
+                                            <p class="text-muted small">Booking #@booking.booking_id.ToString("D4")</p>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <p class="mb-2 d-flex align-items-center">
+                                                <i class="bi bi-calendar-date me-2 text-muted"></i>
+                                                <span>Booked on <strong>@booking.bk_date.ToString("MMM dd, yyyy")</strong></span>
+                                            </p>
+                                            <p class="mb-2 d-flex align-items-center">
+                                                <i class="bi bi-people me-2 text-muted"></i>
+                                                <span><strong>@booking.numtravelers</strong> Travelers</span>
+                                            </p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="mb-2 d-flex align-items-center">
+                                                <i class="bi bi-calendar-week me-2 text-muted"></i>
+                                                <span>
+                                                    <strong>@booking.travel_start_date.ToString("MMM dd")</strong> -
+                                                    <strong>@booking.travel_end_date.ToString("MMM dd, yyyy")</strong>
+                                                </span>
+                                            </p>
+                                            <p class="mb-0 d-flex align-items-center">
+                                                <i class="bi bi-clock me-2 text-muted"></i>
+                                                <span>
+                                                    <strong>@((booking.travel_end_date - booking.travel_start_date).Days)</strong> Days
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 d-flex flex-column justify-content-center align-items-center p-3 position-relative"
+                                     style="background-color: @(booking.status.ToLower() == "confirmed" ? "#f8fff8" :
+                                                                booking.status.ToLower() == "pending" ? "#fffdf8" :
+                                                                booking.status.ToLower() == "completed" ? "#fff8f8" : "#f8f9fa");
+                                            border-left: 1px dashed #dee2e6;">
+                                    <div class="text-center mb-3">
+                                        <span class="d-block text-muted small">Total Cost</span>
+                                        <span class="fs-2 fw-bold"
+                                              style="color: @(booking.status.ToLower() == "confirmed" ? "#2ecc71" :
+                                                             booking.status.ToLower() == "pending" ? "#f39c12" :
+                                                             booking.status.ToLower() == "completed" ? "#e74c3c" : "#3498db")">
+                                            $@booking.bk_cost.ToString("0.00")
+                                        </span>
+                                    </div>
+
+                                    @if (booking.status == "Pending")
+                                    {
+                                        <div class="d-grid gap-2">
+                                            <a href="@Url.Action("Payment", "Booking", new { id = booking.booking_id })"
+                                               class="btn btn-success rounded-pill shadow-sm pulse-animation">
+                                                <i class="bi bi-credit-card me-1"></i> Complete Booking
+                                            </a>
+
+                                            <button class="btn btn-outline-danger rounded-pill shadow-sm"
+                                                    onclick="confirmCancel(@booking.booking_id)">
+                                                <i class="bi bi-x-circle me-1"></i> Cancel Booking
+                                            </button>
+                                        </div>
+                                    }
+
+                                    else if (booking.status == "Confirmed")
+                                    {
+                                        <a class="btn btn-primary w-100 rounded-pill shadow-sm"
+                                           href="@Url.Action("BookingSummary", "Booking", new { id = booking.booking_id })">
+                                            <i class="bi bi-file-earmark-text me-1"></i> View Details
+                                        </a>
+                                    }
+                                    else if (booking.status == "Completed")
+                                    {
+                                        <a class="btn btn-primary w-100 rounded-pill shadow-sm"
+                                           href="@Url.Action("BookingSummary", "Booking", new { id = booking.booking_id })">
+                                            <i class="bi bi-file-earmark-text me-1"></i> View Details
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+    <script>
+        function confirmCancel(bookingId) {
+            if (confirm("Are you sure you want to cancel this booking? This action cannot be undone.")) {
+                window.location.href = '/Booking/CancelBooking/' + bookingId;
+            }
+        }
+    </script>
+
+</div>

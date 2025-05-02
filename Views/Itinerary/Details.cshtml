@@ -1,0 +1,209 @@
+﻿@model Wanderlust.Models.ITINERARY
+@{
+    ViewBag.Title = "My Saved Itinerary";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var destinations = ViewBag.Destinations as List<Wanderlust.Models.DESTINATION>;
+}
+
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Home</a></li>
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Itinerary")">My Itineraries</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">@Model.itinerary_name</li>
+                </ol>
+            </nav>
+            <h1 class="display-5 fw-bold text-primary">@Model.itinerary_name</h1>
+            <p class="lead text-muted">Your personalized travel plan with @destinations.Count destination@(destinations.Count != 1 ? "s" : "")</p>
+        </div>
+        <div class="col-md-4 text-md-end d-flex align-items-center justify-content-md-end mt-3 mt-md-0">
+            <div class="btn-group">
+                <a href="@Url.Action("Index", "Destination")" class="btn btn-outline-primary">
+                    <i class="bi bi-plus-circle"></i> Add More Destinations
+                </a>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-three-dots"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="@Url.Action("Edit", new { id = Model.itinerary_id })"><i class="bi bi-pencil me-2"></i>Edit Details</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="window.print()"><i class="bi bi-printer me-2"></i>Print Itinerary</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="@Url.Action("Delete", new { id = Model.itinerary_id })"><i class="bi bi-trash me-2"></i>Delete Itinerary</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0"><i class="bi bi-info-circle me-2"></i>Itinerary Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-3">
+                        <div class="text-muted">Itinerary ID</div>
+                        <div class="fw-bold">#@Model.itinerary_id</div>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <div class="text-muted">Created By</div>
+                        <div>@Model.USER.email</div>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <div class="text-muted">Destinations</div>
+                        <div>@destinations.Count</div>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <div class="text-muted">Estimated Duration</div>
+                        <div>@(destinations.Count * 2) days</div>
+                    </div>
+                </div>
+                <div class="card-footer bg-white border-top">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="text-muted">Total Estimated Cost</div>
+                        <div class="h4 mb-0 text-primary">$@Model.price.ToString("N2")</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0"><i class="bi bi-map me-2"></i>Your Destinations</h5>
+                    <span class="badge bg-primary rounded-pill">@destinations.Count</span>
+                </div>
+                <div class="card-body p-0">
+                    @if (destinations != null && destinations.Any())
+                    {
+                        <div class="list-group list-group-flush">
+                            @foreach (var dest in destinations)
+                            {
+                                <div class="list-group-item list-group-item-action">
+                                    <div class="row g-0">
+                                        <div class="col-md-3 col-lg-2">
+                                            @if (!string.IsNullOrEmpty(dest.image))
+                                            {
+                                                <img src="@Url.Content("~/"+dest.image)" class="img-fluid rounded" alt="@dest.destName" style="object-fit: cover; height: 100px; width: 100%;">
+                                            }
+                                            else
+                                            {
+                                                <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 100px;">
+                                                    <i class="bi bi-image text-muted" style="font-size: 2rem;"></i>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div class="col-md-9 col-lg-10">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-start">
+                                                    <h5 class="card-title mb-1">@dest.destName</h5>
+                                                    <span class="badge bg-primary rounded-pill">$@dest.price.ToString("N2")</span>
+                                                </div>
+                                                <p class="card-text small text-muted mb-1">@(dest.description != null ? (dest.description.Length > 120 ? dest.description.Substring(0, 120) + "..." : dest.description) : "")</p>
+                                                <div class="d-flex mt-2">
+                                                    <a href="@Url.Action("Details", "Destination", new { id = dest.dest_id })" class="btn btn-sm btn-outline-primary me-2">
+                                                        <i class="bi bi-eye"></i> View Details
+                                                    </a>
+                                                    <a href="@Url.Action("RemoveDestination", "Itinerary", new { itineraryId = Model.itinerary_id, destId = dest.dest_id })" class="btn btn-sm btn-outline-danger">
+                                                        <i class="bi bi-trash"></i> Remove
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="bi bi-map display-4 text-muted"></i>
+                            <p class="mt-3">No destinations in this itinerary yet.</p>
+                            <a href="@Url.Action("Index", "Destination")" class="btn btn-primary">Browse Destinations</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0"><i class="bi bi-calendar-check me-2"></i>Travel Journey</h5>
+                </div>
+                <div class="card-body">
+                    <div class="position-relative journey-timeline">
+                        @for (int i = 0; i < destinations.Count; i++)
+                        {
+                            <div class="journey-item d-flex mb-4">
+                                <div class="journey-point">
+                                    <div class="journey-circle @(i == 0 ? "bg-success" : i == destinations.Count - 1 ? "bg-danger" : "bg-primary")">
+                                        <span>@(i + 1)</span>
+                                    </div>
+                                </div>
+                                <div class="journey-content ms-4">
+                                    <h5 class="mb-2">@destinations[i].destName</h5>
+                                    <p class="text-muted mb-2">@(destinations[i].description != null ? (destinations[i].description.Length > 200 ? destinations[i].description.Substring(0, 200) + "..." : destinations[i].description) : "")</p>
+                                    <div class="mb-2">
+                                        <span class="badge bg-light text-dark">Recommended Stay: 2 days</span>
+                                        <span class="badge bg-light text-dark">$@destinations[i].price.ToString("N2") per person</span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 text-center">
+            <a href="@Url.Action("Index", "Itinerary")" class="btn btn-outline-secondary me-2">
+                <i class="bi bi-arrow-left"></i> Back to My Itineraries
+            </a>
+            <a href="@Url.Action("BookItinerary", "Booking", new { id = Model.itinerary_id })" class="btn btn-success">
+                <i class="bi bi-check-circle"></i> Book This Itinerary
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .journey-timeline::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 15px;
+        width: 2px;
+        background-color: #e9ecef;
+    }
+
+    .journey-point {
+        position: relative;
+        z-index: 1;
+    }
+
+    .journey-circle {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+    }
+
+    .journey-content {
+        padding-bottom: 20px;
+    }
+</style>
