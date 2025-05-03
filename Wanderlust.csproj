@@ -204,6 +204,7 @@
     <Compile Include="ViewModel\BookingDetailsViewModel.cs" />
     <Compile Include="ViewModel\BookingSummaryViewModel.cs" />
     <Compile Include="ViewModel\BookItineraryViewModel.cs" />
+    <Compile Include="ViewModel\ChangePasswordViewModel.cs" />
     <Compile Include="ViewModel\DestinationDetailsViewModel.cs" />
     <Compile Include="ViewModel\HomeViewModel.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
@@ -364,6 +365,7 @@
     <Content Include="Views\Blog\Index.cshtml" />
     <Content Include="Views\Blog\AuthorIndex.cshtml" />
     <Content Include="Views\Blog\UserIndex.cshtml" />
+    <Content Include="Views\Account\ChangePassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

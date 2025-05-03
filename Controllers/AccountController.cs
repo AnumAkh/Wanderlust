@@ -251,6 +251,64 @@ namespace Wanderlust.Controllers
             return View(model);
         }
 
+
+
+        public ActionResult ChangePassword()
+        {
+            // Check if user is logged in
+            if (Session["UserId"] == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            return View();
+        }
+
+        // POST: Account/ChangePassword
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ChangePassword(ChangePasswordViewModel model)
+        {
+            // Check if user is logged in
+            if (Session["UserId"] == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            if (ModelState.IsValid)
+            {
+                int userId = Convert.ToInt32(Session["UserId"]);
+                var user = _context.USERs.Find(userId);
+
+                if (user == null)
+                {
+                    return HttpNotFound();
+                }
+
+                // Verify current password
+                if (user.password != model.CurrentPassword)
+                {
+                    ModelState.AddModelError("CurrentPassword", "Current password is incorrect");
+                    return View(model);
+                }
+
+                // Verify that new password and confirmation match
+                if (model.NewPassword != model.ConfirmPassword)
+                {
+                    ModelState.AddModelError("ConfirmPassword", "New password and confirmation do not match");
+                    return View(model);
+                }
+
+                // Update password
+                user.password = model.NewPassword;
+                _context.SaveChanges();
+
+                TempData["SuccessMessage"] = "Your password has been changed successfully!";
+                return RedirectToAction("Dashboard");
+            }
+
+            return View(model);
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

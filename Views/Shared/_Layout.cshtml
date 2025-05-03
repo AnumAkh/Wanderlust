@@ -327,15 +327,17 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="@Url.Action("Index", "Package")">Packages</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="@Url.Action("Index", "Itinerary")">Itinerary</a>
-                                </li>
+
                                 <li class="nav-item">
                                     <a class="nav-link" href="@Url.Action("Index", "Blog")">Blog</a>
                                 </li>
 
                                 if (Session["UserId"] != null)
                                 {
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="@Url.Action("Index", "Itinerary")">Itinerary</a>
+                                    </li>
+
                                     <!-- Logged-in User Navigation -->
                                     <li class="nav-item">
                                         <a class="nav-link" href="@Url.Action("Index", "Wishlist")">
