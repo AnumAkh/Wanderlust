@@ -20,6 +20,9 @@
                 @* Use a hidden field for author_id instead of a dropdown *@
                 @Html.HiddenFor(model => model.author_id)
 
+                @* Keep publication_date as a hidden field so it's not lost during form submission *@
+                @Html.HiddenFor(model => model.publication_date)
+
                 <div class="mb-3">
                     @Html.LabelFor(model => model.title, new { @class = "form-label" })
                     @Html.EditorFor(model => model.title, new { htmlAttributes = new { @class = "form-control" } })
@@ -32,11 +35,7 @@
                     @Html.ValidationMessageFor(model => model.content, "", new { @class = "text-danger" })
                 </div>
 
-                <div class="mb-3">
-                    @Html.LabelFor(model => model.publication_date, new { @class = "form-label" })
-                    @Html.EditorFor(model => model.publication_date, new { htmlAttributes = new { @class = "form-control", type = "datetime-local" } })
-                    @Html.ValidationMessageFor(model => model.publication_date, "", new { @class = "text-danger" })
-                </div>
+              
 
                 <div class="mt-4">
                     <button type="submit" class="btn btn-autumn">

@@ -18,6 +18,7 @@ namespace Wanderlust.Models
         public BLOG()
         {
             this.COMMENTs = new HashSet<COMMENT>();
+            this.BLOG_LIKE = new HashSet<BLOG_LIKE>();
         }
     
         public int blog_id { get; set; }
@@ -25,9 +26,12 @@ namespace Wanderlust.Models
         public string title { get; set; }
         public string content { get; set; }
         public System.DateTime publication_date { get; set; }
+        public Nullable<int> like_count { get; set; }
     
         public virtual AUTHOR AUTHOR { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<COMMENT> COMMENTs { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BLOG_LIKE> BLOG_LIKE { get; set; }
     }
 }

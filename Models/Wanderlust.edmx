@@ -24,6 +24,16 @@
           <Property Name="title" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="content" Type="text" Nullable="false" />
           <Property Name="publication_date" Type="datetime" Nullable="false" />
+          <Property Name="like_count" Type="int" />
+        </EntityType>
+        <EntityType Name="BLOG_LIKE">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="blog_id" Type="int" Nullable="false" />
+          <Property Name="user_id" Type="int" Nullable="false" />
+          <Property Name="like_date" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="BOOKING">
           <Key>
@@ -147,6 +157,34 @@
             </Principal>
             <Dependent Role="BLOG">
               <PropertyRef Name="author_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BLOG_LIKE_BLOG">
+          <End Role="BLOG" Type="Self.BLOG" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="BLOG_LIKE" Type="Self.BLOG_LIKE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BLOG">
+              <PropertyRef Name="blog_id" />
+            </Principal>
+            <Dependent Role="BLOG_LIKE">
+              <PropertyRef Name="blog_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BLOG_LIKE_USER">
+          <End Role="USER" Type="Self.USER" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="BLOG_LIKE" Type="Self.BLOG_LIKE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER">
+              <PropertyRef Name="userID" />
+            </Principal>
+            <Dependent Role="BLOG_LIKE">
+              <PropertyRef Name="user_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -335,6 +373,7 @@
         <EntityContainer Name="WanderlustModelStoreContainer">
           <EntitySet Name="AUTHOR" EntityType="Self.AUTHOR" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BLOG" EntityType="Self.BLOG" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BLOG_LIKE" EntityType="Self.BLOG_LIKE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BOOKING" EntityType="Self.BOOKING" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="COMMENT" EntityType="Self.COMMENT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DESTINATION" EntityType="Self.DESTINATION" Schema="dbo" store:Type="Tables" />
@@ -349,6 +388,14 @@
           <AssociationSet Name="FK_BLOG_AUTHOR" Association="Self.FK_BLOG_AUTHOR">
             <End Role="AUTHOR" EntitySet="AUTHOR" />
             <End Role="BLOG" EntitySet="BLOG" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BLOG_LIKE_BLOG" Association="Self.FK_BLOG_LIKE_BLOG">
+            <End Role="BLOG" EntitySet="BLOG" />
+            <End Role="BLOG_LIKE" EntitySet="BLOG_LIKE" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BLOG_LIKE_USER" Association="Self.FK_BLOG_LIKE_USER">
+            <End Role="USER" EntitySet="USER" />
+            <End Role="BLOG_LIKE" EntitySet="BLOG_LIKE" />
           </AssociationSet>
           <AssociationSet Name="FK_BOOKING_USER" Association="Self.FK_BOOKING_USER">
             <End Role="USER" EntitySet="USER" />
@@ -429,6 +476,8 @@
           <Property Name="publication_date" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="AUTHOR" Relationship="Self.FK_BLOG_AUTHOR" FromRole="BLOG" ToRole="AUTHOR" />
           <NavigationProperty Name="COMMENTs" Relationship="Self.FK_COMMENT_BLOG" FromRole="BLOG" ToRole="COMMENT" />
+          <Property Name="like_count" Type="Int32" />
+          <NavigationProperty Name="BLOG_LIKE" Relationship="WanderlustModel.FK_BLOG_LIKE_BLOG" FromRole="BLOG" ToRole="BLOG_LIKE" />
         </EntityType>
         <EntityType Name="BOOKING">
           <Key>
@@ -555,6 +604,7 @@
           <NavigationProperty Name="ITINERARies" Relationship="Self.FK_ITINERARY_USER" FromRole="USER" ToRole="ITINERARY" />
           <NavigationProperty Name="REVIEWs" Relationship="Self.FK_REVIEW_USER" FromRole="USER" ToRole="REVIEW" />
           <NavigationProperty Name="WISHLISTs" Relationship="Self.FK_WISHLIST_USER" FromRole="USER" ToRole="WISHLIST" />
+          <NavigationProperty Name="BLOG_LIKE" Relationship="WanderlustModel.FK_BLOG_LIKE_USER" FromRole="USER" ToRole="BLOG_LIKE" />
         </EntityType>
         <EntityType Name="WISHLIST">
           <Key>
@@ -832,7 +882,55 @@
             <End Role="USER" EntitySet="USERs" />
             <End Role="WISHLIST" EntitySet="WISHLISTs" />
           </AssociationSet>
+          <EntitySet Name="BLOG_LIKE" EntityType="WanderlustModel.BLOG_LIKE" />
+          <AssociationSet Name="FK_BLOG_LIKE_BLOG" Association="WanderlustModel.FK_BLOG_LIKE_BLOG">
+            <End Role="BLOG" EntitySet="BLOGs" />
+            <End Role="BLOG_LIKE" EntitySet="BLOG_LIKE" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BLOG_LIKE_USER" Association="WanderlustModel.FK_BLOG_LIKE_USER">
+            <End Role="USER" EntitySet="USERs" />
+            <End Role="BLOG_LIKE" EntitySet="BLOG_LIKE" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="BLOG_LIKE">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="blog_id" Type="Int32" Nullable="false" />
+          <Property Name="user_id" Type="Int32" Nullable="false" />
+          <Property Name="like_date" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="BLOG" Relationship="WanderlustModel.FK_BLOG_LIKE_BLOG" FromRole="BLOG_LIKE" ToRole="BLOG" />
+          <NavigationProperty Name="USER" Relationship="WanderlustModel.FK_BLOG_LIKE_USER" FromRole="BLOG_LIKE" ToRole="USER" />
+        </EntityType>
+        <Association Name="FK_BLOG_LIKE_BLOG">
+          <End Type="WanderlustModel.BLOG" Role="BLOG" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="WanderlustModel.BLOG_LIKE" Role="BLOG_LIKE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BLOG">
+              <PropertyRef Name="blog_id" />
+            </Principal>
+            <Dependent Role="BLOG_LIKE">
+              <PropertyRef Name="blog_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BLOG_LIKE_USER">
+          <End Type="WanderlustModel.USER" Role="USER" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="WanderlustModel.BLOG_LIKE" Role="BLOG_LIKE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER">
+              <PropertyRef Name="userID" />
+            </Principal>
+            <Dependent Role="BLOG_LIKE">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -853,6 +951,7 @@
           <EntitySetMapping Name="BLOGs">
             <EntityTypeMapping TypeName="WanderlustModel.BLOG">
               <MappingFragment StoreEntitySet="BLOG">
+                <ScalarProperty Name="like_count" ColumnName="like_count" />
                 <ScalarProperty Name="blog_id" ColumnName="blog_id" />
                 <ScalarProperty Name="author_id" ColumnName="author_id" />
                 <ScalarProperty Name="title" ColumnName="title" />
@@ -980,6 +1079,16 @@
                 <ScalarProperty Name="item_id" ColumnName="item_id" />
                 <ScalarProperty Name="dest_id" ColumnName="dest_id" />
                 <ScalarProperty Name="user_id" ColumnName="user_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BLOG_LIKE">
+            <EntityTypeMapping TypeName="WanderlustModel.BLOG_LIKE">
+              <MappingFragment StoreEntitySet="BLOG_LIKE">
+                <ScalarProperty Name="like_date" ColumnName="like_date" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="blog_id" ColumnName="blog_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -38,5 +38,6 @@ namespace Wanderlust.Models
         public virtual DbSet<REVIEW> REVIEWs { get; set; }
         public virtual DbSet<USER> USERs { get; set; }
         public virtual DbSet<WISHLIST> WISHLISTs { get; set; }
+        public virtual DbSet<BLOG_LIKE> BLOG_LIKE { get; set; }
     }
 }

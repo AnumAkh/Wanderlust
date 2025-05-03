@@ -34,14 +34,14 @@
                         <!-- Like button for logged in users -->
                         <button type="button" class="btn me-2 @(ViewBag.UserLiked ? "btn-primary" : "btn-outline-primary")"
                                 id="like-button" data-blog-id="@Model.blog_id">
-                            <i class="bi bi-hand-thumbs-up"></i> <span id="like-count">@Model.likes</span> Likes
+                            <i class="bi bi-hand-thumbs-up"></i> <span id="like-count">@(Model.like_count ?? 0)</span> Likes
                         </button>
                     }
                     else
                     {
                         <!-- Read-only likes display for authors and guests -->
                         <span class="me-3">
-                            <i class="bi bi-hand-thumbs-up"></i> @Model.likes Likes
+                            <i class="bi bi-hand-thumbs-up"></i> @(Model.like_count ?? 0) Likes
                         </span>
                     }
                 </div>
@@ -58,6 +58,64 @@
                         <i class="bi bi-arrow-left"></i> Back to Blogs
                     </a>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comments Section -->
+    <div class="card shadow border-0 mt-4">
+        <div class="card-body p-4">
+            <h4 class="mb-4" style="color: #d2691e;">Comments</h4>
+
+            @if (Session["Role"] != null && Session["Role"].ToString() == "User" && Session["UserId"] != null)
+            {
+                <!-- Comment form for logged in users -->
+                <div class="mb-4">
+                    <div class="d-flex">
+                        <textarea id="comment-content" class="form-control me-2" rows="2"
+                                  placeholder="Write a comment..."></textarea>
+                        <button type="button" id="post-comment-btn" class="btn btn-autumn"
+                                data-blog-id="@Model.blog_id">
+                            Post
+                        </button>
+                    </div>
+                </div>
+            }
+            else if (Session["Role"] == null)
+            {
+                <!-- Message for guests -->
+                <div class="alert alert-info mb-4">
+                    <a href="@Url.Action("Login", "Account")" class="alert-link">Sign in</a> to post a comment.
+                </div>
+            }
+
+            <!-- Comments list -->
+            <div id="comments-container">
+                @if (ViewBag.Comments != null && ViewBag.Comments.Count > 0)
+                {
+                    foreach (var comment in ViewBag.Comments)
+                    {
+                        <div class="comment mb-3 p-3 border-bottom">
+                            <div class="d-flex justify-content-between mb-2">
+                                <div>
+                                    <strong>@comment.USER.firstName @comment.USER.lastName</strong>
+                                </div>
+                                <div class="text-muted small">
+                                    @comment.date_posted.ToString("MMM dd, yyyy h:mm tt")
+                                </div>
+                            </div>
+                            <div class="comment-content">
+                                @comment.content
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="alert alert-light text-center">
+                        No comments.
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -104,6 +162,55 @@
                         }
                     });
                 }
+
+                // Handle comment posting
+                $('#post-comment-btn').click(function() {
+                    var blogId = $(this).data('blog-id');
+                    var commentContent = $('#comment-content').val().trim();
+
+                    if (commentContent.length === 0) {
+                        alert('Please enter a comment.');
+                        return;
+                    }
+
+                    $.ajax({
+                        url: '@Url.Action("AddComment", "Blog")',
+                        type: 'POST',
+                        data: {
+                            blogId: blogId,
+                            commentContent: commentContent,
+                            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                // Clear the comment input
+                                $('#comment-content').val('');
+
+                                // Add the new comment to the top of the comments list
+                                var commentHtml = '<div class="comment mb-3 p-3 border-bottom">' +
+                                    '<div class="d-flex justify-content-between mb-2">' +
+                                    '<div><strong>' + response.userName + '</strong></div>' +
+                                    '<div class="text-muted small">' + response.commentDate + '</div>' +
+                                    '</div>' +
+                                    '<div class="comment-content">' + response.commentContent + '</div>' +
+                                    '</div>';
+
+                                // If there are no comments, remove the "no comments" message
+                                if ($('#comments-container .alert').length > 0) {
+                                    $('#comments-container').empty();
+                                }
+
+                                // Add the new comment at the top
+                                $('#comments-container').prepend(commentHtml);
+                            } else {
+                                alert(response.message);
+                            }
+                        },
+                        error: function() {
+                            alert('An error occurred. Please try again.');
+                        }
+                    });
+                });
                 </text>
             }
         });

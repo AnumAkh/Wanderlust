@@ -32,6 +32,9 @@
         <AssociationConnector Association="WanderlustModel.FK_PACKAGE_DESTINATION_PACKAGE" ManuallyRouted="false" />
         <AssociationConnector Association="WanderlustModel.FK_REVIEW_USER" ManuallyRouted="false" />
         <AssociationConnector Association="WanderlustModel.FK_WISHLIST_USER" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="WanderlustModel.BLOG_LIKE" Width="1.5" PointX="7.5" PointY="18.125" />
+        <AssociationConnector Association="WanderlustModel.FK_BLOG_LIKE_BLOG" />
+        <AssociationConnector Association="WanderlustModel.FK_BLOG_LIKE_USER" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

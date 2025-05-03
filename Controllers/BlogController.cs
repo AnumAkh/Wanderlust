@@ -44,95 +44,158 @@ namespace Wanderlust.Controllers
             }
         }
 
-        //// GET: Blog/Details/5
-        //public ActionResult Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
+        // GET: Blog/Details/5
+        public ActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
 
-        //    BLOG blog = db.BLOGs.Find(id);
-        //    if (blog == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
+            BLOG blog = db.BLOGs.Find(id);
+            if (blog == null)
+            {
+                return HttpNotFound();
+            }
 
-        //    // Check if user has liked this blog
-        //    if (Session["UserId"] != null && Session["Role"] != null && Session["Role"].ToString() == "User")
-        //    {
-        //        int userId = Convert.ToInt32(Session["UserId"]);
-        //        var like = db.BLOG_LIKE.FirstOrDefault(l => l.blog_id == id && l.user_id == userId);
+            // Check if user has liked this blog
+            if (Session["UserId"] != null && Session["Role"] != null && Session["Role"].ToString() == "User")
+            {
+                int userId = Convert.ToInt32(Session["UserId"]);
+                var like = db.BLOG_LIKE.FirstOrDefault(l => l.blog_id == id && l.user_id == userId);
 
-        //        ViewBag.UserLiked = (like != null);
-        //    }
+                ViewBag.UserLiked = (like != null);
+            }
 
-        //    return View(blog);
-        //}
+            // Get comments for this blog
+            var comments = db.COMMENTs
+                .Where(c => c.blog_id == id)
+                .Include(c => c.USER)
+                .OrderByDescending(c => c.date_posted)
+                .ToList();
 
-        //// POST: Blog/ToggleLike
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult ToggleLike(int blogId)
-        //{
-        //    // Check if user is logged in and is a regular user
-        //    if (Session["UserId"] == null || Session["Role"] == null || Session["Role"].ToString() != "User")
-        //    {
-        //        return Json(new { success = false, message = "You must be logged in to like blogs." });
-        //    }
+            ViewBag.Comments = comments;
 
-        //    int userId = Convert.ToInt32(Session["UserId"]);
+            return View(blog);
+        }
 
-        //    try
-        //    {
-        //        // Find the blog
-        //        BLOG blog = db.BLOGs.Find(blogId);
-        //        if (blog == null)
-        //        {
-        //            return Json(new { success = false, message = "Blog not found." });
-        //        }
+        // POST: Blog/ToggleLike
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ToggleLike(int blogId)
+        {
+            // Check if user is logged in and is a regular user
+            if (Session["UserId"] == null || Session["Role"] == null || Session["Role"].ToString() != "User")
+            {
+                return Json(new { success = false, message = "You must be logged in to like blogs." });
+            }
 
-        //        // Check if user has already liked this blog
-        //        var existingLike = db.BLOG_LIKE.FirstOrDefault(l => l.blog_id == blogId && l.user_id == userId);
-        //        bool userLiked = false;
+            int userId = Convert.ToInt32(Session["UserId"]);
 
-        //        if (existingLike != null)
-        //        {
-        //            // Remove the like (toggle off)
-        //            db.BLOG_LIKE.Remove(existingLike);
-        //            blog.likes = Math.Max(0, blog.likes - 1);
-        //            userLiked = false;
-        //        }
-        //        else
-        //        {
-        //            // Add a new like
-        //            var newLike = new BLOG_LIKE
-        //            {
-        //                blog_id = blogId,
-        //                user_id = userId,
-        //                like_date = DateTime.Now
-        //            };
+            try
+            {
+                // Find the blog
+                BLOG blog = db.BLOGs.Find(blogId);
+                if (blog == null)
+                {
+                    return Json(new { success = false, message = "Blog not found." });
+                }
 
-        //            db.BLOG_LIKE.Add(newLike);
-        //            blog.likes++;
-        //            userLiked = true;
-        //        }
+                // Check if user has already liked this blog
+                var existingLike = db.BLOG_LIKE.FirstOrDefault(l => l.blog_id == blogId && l.user_id == userId);
+                bool userLiked = false;
 
-        //        // Save changes
-        //        db.SaveChanges();
+                if (existingLike != null)
+                {
+                    // Remove the like (toggle off)
+                    db.BLOG_LIKE.Remove(existingLike);
+                    // Update like count (make sure it doesn't go below 0)
+                    blog.like_count = blog.like_count.HasValue ? Math.Max(0, blog.like_count.Value - 1) : 0;
+                    userLiked = false;
+                }
+                else
+                {
+                    // Add a new like
+                    var newLike = new BLOG_LIKE
+                    {
+                        blog_id = blogId,
+                        user_id = userId,
+                        like_date = DateTime.Now
+                    };
 
-        //        return Json(new
-        //        {
-        //            success = true,
-        //            likes = blog.likes,
-        //            userLiked = userLiked
-        //        });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Json(new { success = false, message = "An error occurred: " + ex.Message });
-        //    }
-        //}
+                    db.BLOG_LIKE.Add(newLike);
+                    // Update like count
+                    blog.like_count = blog.like_count.HasValue ? blog.like_count.Value + 1 : 1;
+                    userLiked = true;
+                }
+
+                // Save changes
+                db.SaveChanges();
+
+                return Json(new
+                {
+                    success = true,
+                    likes = blog.like_count,
+                    userLiked = userLiked
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "An error occurred: " + ex.Message });
+            }
+        }
+
+        // POST: Blog/AddComment
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddComment(int blogId, string commentContent)
+        {
+            // Check if user is logged in
+            if (Session["UserId"] == null || Session["Role"] == null || Session["Role"].ToString() != "User")
+            {
+                return Json(new { success = false, message = "You must be logged in to comment on blogs." });
+            }
+
+            int userId = Convert.ToInt32(Session["UserId"]);
+
+            try
+            {
+                // Find the blog
+                BLOG blog = db.BLOGs.Find(blogId);
+                if (blog == null)
+                {
+                    return Json(new { success = false, message = "Blog not found." });
+                }
+
+                // Create a new comment
+                var newComment = new COMMENT
+                {
+                    blog_id = blogId,
+                    user_id = userId,
+                    content = commentContent,
+                    date_posted = DateTime.Now
+                };
+
+                db.COMMENTs.Add(newComment);
+                db.SaveChanges();
+
+                // Get user info for the response
+                var user = db.USERs.Find(userId);
+
+                return Json(new
+                {
+                    success = true,
+                    commentId = newComment.cmnt_id,
+                    userName = user.firstName + " " + user.lastName,
+                    commentDate = newComment.date_posted.ToString("MMM dd, yyyy h:mm tt"),
+                    commentContent = newComment.content
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "An error occurred: " + ex.Message });
+            }
+        }
 
         // GET: Blog/Create
         public ActionResult Create()
@@ -215,10 +278,10 @@ namespace Wanderlust.Controllers
             return View(blog);
         }
 
-        // POST: Blog/Edit/5
+        //Edit Post
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "blog_id,author_id,title,content,publication_date,likes,dislikes")] BLOG blog)
+        public ActionResult Edit([Bind(Include = "blog_id,author_id,title,content,publication_date")] BLOG blog)
         {
             // Check if user is an author
             if (Session["Role"] == null || Session["Role"].ToString() != "Author")
@@ -237,45 +300,28 @@ namespace Wanderlust.Controllers
 
             if (ModelState.IsValid)
             {
-                db.Entry(blog).State = EntityState.Modified;
+                // Get the existing blog to preserve any fields we're not updating
+                var existingBlog = db.BLOGs.Find(blog.blog_id);
+                if (existingBlog == null)
+                {
+                    return HttpNotFound();
+                }
+
+                // Only update title and content
+                existingBlog.title = blog.title;
+                existingBlog.content = blog.content;
+
+                // Note: We're not updating publication_date
+
+                db.Entry(existingBlog).State = EntityState.Modified;
                 db.SaveChanges();
+
+                TempData["SuccessMessage"] = "Blog has been updated successfully.";
                 return RedirectToAction("Index");
             }
 
             return View(blog);
         }
-
-        // GET: Blog/Delete/5
-        //public ActionResult Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-
-        //    // Check if user is an author
-        //    if (Session["Role"] == null || Session["Role"].ToString() != "Author")
-        //    {
-        //        TempData["ErrorMessage"] = "You do not have permission to delete blogs.";
-        //        return RedirectToAction("Index", "Blog");
-        //    }
-
-        //    BLOG bLOG = db.BLOGs.Find(id);
-        //    if (bLOG == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-
-        //    // Check if this blog belongs to the current author
-        //    int authorId = Convert.ToInt32(Session["AuthorId"]);
-        //    if (bLOG.author_id != authorId)
-        //    {
-        //        TempData["ErrorMessage"] = "You can only delete your own blogs.";
-        //        return RedirectToAction("Index", "Blog");
-        //    }
-
-        //    return View(bLOG);
-        //}
 
         // POST: Blog/DeleteAjax/5
         [HttpPost]

@@ -149,6 +149,9 @@
     <Compile Include="Models\BLOG.cs">
       <DependentUpon>Wanderlust.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\BLOG_LIKE.cs">
+      <DependentUpon>Wanderlust.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\BOOKING.cs">
       <DependentUpon>Wanderlust.tt</DependentUpon>
     </Compile>

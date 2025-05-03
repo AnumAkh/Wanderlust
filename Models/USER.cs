@@ -22,6 +22,7 @@ namespace Wanderlust.Models
             this.ITINERARies = new HashSet<ITINERARY>();
             this.REVIEWs = new HashSet<REVIEW>();
             this.WISHLISTs = new HashSet<WISHLIST>();
+            this.BLOG_LIKE = new HashSet<BLOG_LIKE>();
         }
     
         public int userID { get; set; }
@@ -42,5 +43,7 @@ namespace Wanderlust.Models
         public virtual ICollection<REVIEW> REVIEWs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WISHLIST> WISHLISTs { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BLOG_LIKE> BLOG_LIKE { get; set; }
     }
 }
