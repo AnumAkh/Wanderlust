@@ -1,32 +1,49 @@
 ﻿@model Wanderlust.ViewModel.HomeViewModel
 
 @{
-    ViewBag.Title = "Home";
+    ViewBag.Title = "Explore Your Dream Destinations";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!-- Hero Section with Carousel -->
+<!-- Hero Section with Enhanced Carousel -->
 <div id="heroCarousel" class="carousel slide no-navbar-spacing" data-bs-ride="carousel">
-    <div class="carousel-inner" style="height: 80vh;">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner" style="height: 90vh;">
         <div class="carousel-item active">
-            <img src="~/Images/Carousel/car-1.jpg" class="d-block w-100" style="object-fit: cover;" alt="Adventure Awaits">
-            <div class="carousel-caption d-none d-md-block">
-                <h1 class="display-4">Adventure Awaits 🍁</h1>
-                <p>Explore stunning places this autumn!</p>
+            <img src="~/Images/Carousel/car-1.jpg" class="d-block w-100" style="object-fit: cover; height: 90vh; filter: brightness(0.8);" alt="Adventure Awaits">
+            <div class="carousel-caption">
+                <h1 class="display-3 fw-bold text-shadow">Adventure Awaits 🍁</h1>
+                <p class="lead fs-4 text-shadow">Explore stunning places this autumn!</p>
+                <div class="mt-4">
+                    <a href="@Url.Action("Index", "Destination")" class="btn btn-light btn-lg px-4 me-2 rounded-pill">Explore Destinations</a>
+                    <a href="@Url.Action("Index", "Package")" class="btn btn-outline-light btn-lg px-4 rounded-pill">View Packages</a>
+                </div>
             </div>
         </div>
         <div class="carousel-item">
-            <img src="~/Images/Carousel/car-2.jpg" class="d-block w-100" style="object-fit: cover;" alt="Breathtaking Views">
-            <div class="carousel-caption d-none d-md-block">
-                <h1 class="display-4">Breathtaking Views 🌄</h1>
-                <p>Discover cozy corners of the world.</p>
+            <img src="~/Images/Carousel/car-2.jpg" class="d-block w-100" style="object-fit: cover; height: 90vh; filter: brightness(0.8);" alt="Breathtaking Views">
+            <div class="carousel-caption">
+                <h1 class="display-3 fw-bold text-shadow">Breathtaking Views 🌄</h1>
+                <p class="lead fs-4 text-shadow">Discover cozy corners of the world.</p>
+                <div class="mt-4">
+                    <a href="@Url.Action("Index", "Destination")" class="btn btn-light btn-lg px-4 me-2 rounded-pill">Explore Destinations</a>
+                    <a href="@Url.Action("Index", "Package")" class="btn btn-outline-light btn-lg px-4 rounded-pill">View Packages</a>
+                </div>
             </div>
         </div>
         <div class="carousel-item">
-            <img src="~/Images/Carousel/car-3.jpg" class="d-block w-100" style="height:1000px" alt="Magical Journeys">
-            <div class="carousel-caption d-none d-md-block">
-                <h1 class="display-4">Magical Journeys ✈️</h1>
-                <p>Travel with Wanderlust this season!</p>
+            <img src="~/Images/Carousel/car-3.jpg" class="d-block w-100" style="object-fit: cover; height: 90vh; filter: brightness(0.8);" alt="Magical Journeys">
+            <div class="carousel-caption">
+                <h1 class="display-3 fw-bold text-shadow">Magical Journeys ✈️</h1>
+                <p class="lead fs-4 text-shadow">Travel with Wanderlust this season!</p>
+                <div class="mt-4">
+                    <a href="@Url.Action("Index", "Destination")" class="btn btn-light btn-lg px-4 me-2 rounded-pill">Explore Destinations</a>
+                    <a href="@Url.Action("Index", "Package")" class="btn btn-outline-light btn-lg px-4 rounded-pill">View Packages</a>
+                </div>
             </div>
         </div>
     </div>
@@ -38,21 +55,114 @@
     </button>
 </div>
 
-<div class="container my-5">
+<!-- Quick Search Section -->
+<div class="search-box-wrapper">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card border-0 search-box">
+                    <div class="card-body p-4">
+                        <h5 class="card-title text-center mb-4 fw-bold"><i class="bi bi-search"></i> Find Your Perfect Getaway</h5>
+                        <form class="row g-3" id="searchForm" action="@Url.Action("Details", "Destination")" method="get">
+                            <div class="col-md-4">
+                                <label class="form-label">Destination</label>
+                                <select class="form-select shadow-sm border-0" id="destinationSelect" name="id" required>
+                                    <option value="" selected disabled>Where do you want to go?</option>
+                                    @foreach (var destination in Model.FeaturedDestinations)
+                                    {
+                                        <option value="@destination.dest_id">@destination.destName</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Check In</label>
+                                <input type="date" class="form-control shadow-sm border-0" name="startDate">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Check Out</label>
+                                <input type="date" class="form-control shadow-sm border-0" name="endDate">
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button type="submit" class="btn btn-autumn w-100 rounded-pill fw-bold">Search</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <!-- Why Choose Us Section -->
+    <section class="mb-5 pt-4">
+        <div class="text-center mb-5">
+            <div class="subtitle">ABOUT US</div>
+            <h2 class="fw-bold text-primary section-title">Why Choose Wanderlust?</h2>
+            <div class="title-divider"></div>
+            <p class="lead text-muted">Making travel memories since 2020</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm feature-card">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-circle">
+                            <i class="bi bi-globe fs-3 text-primary"></i>
+                        </div>
+                        <h4>Handpicked Destinations</h4>
+                        <p class="text-muted">We carefully select the most breathtaking and unique destinations around the world.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm feature-card">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-circle">
+                            <i class="bi bi-piggy-bank fs-3 text-primary"></i>
+                        </div>
+                        <h4>Best Price Guarantee</h4>
+                        <p class="text-muted">Our partnerships with local providers ensure you always get the best possible price.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm feature-card">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-circle">
+                            <i class="bi bi-headset fs-3 text-primary"></i>
+                        </div>
+                        <h4>24/7 Support</h4>
+                        <p class="text-muted">Our dedicated team is always ready to assist you before, during, and after your journey.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Destinations Section -->
     <section class="mb-5">
-        <h2 class="mb-4 text-center text-primary">🍁 Featured Destinations</h2>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <div class="subtitle">EXPLORE</div>
+                <h2 class="fw-bold text-primary section-title mb-0">🍁 Featured Destinations</h2>
+            </div>
+            <a href="@Url.Action("Index", "Destination")" class="btn btn-outline-primary rounded-pill">View All Destinations <i class="bi bi-arrow-right"></i></a>
+        </div>
         <div class="row g-4">
             @foreach (var destination in Model.FeaturedDestinations)
             {
                 <div class="col-md-3">
-                    <div class="card h-100 shadow-sm">
-                        <img src="~/@destination.image" class="card-img-top" alt="@destination.destName" style="height: 200px; object-fit: cover;">
+                    <div class="card h-100 border-0 shadow-sm hover-card destination-card">
+                        <div class="position-relative card-img-wrapper">
+                            <img src="~/@destination.image" class="card-img-top" alt="@destination.destName">
+                            <span class="position-absolute top-0 end-0 bg-autumn text-white m-2 px-2 py-1 rounded-pill price-tag">$@destination.price</span>
+                        </div>
                         <div class="card-body d-flex flex-column">
-                            <h5 class="card-title text-center">@destination.destName</h5>
-                            <p class="card-text text-center fw-bold text-success">Price: $@destination.price</p>
-                            <p class="card-text">@destination.description</p>
-                            <div class="mt-auto text-center">
-                                @Html.ActionLink("View Details 🍂", "Details","Destination", new { id = destination.dest_id }, new { @class = "btn btn-autumn btn-sm" })
+                            <h5 class="card-title">@destination.destName</h5>
+                            <p class="card-text text-muted mb-3 small">@(destination.description.Length > 100 ? destination.description.Substring(0, 100) + "..." : destination.description)</p>
+                            <div class="mt-auto d-flex justify-content-between align-items-center">
+                                @Html.ActionLink("View Details", "Details", "Destination", new { id = destination.dest_id }, new { @class = "btn btn-sm btn-autumn rounded-pill" })
                             </div>
                         </div>
                     </div>
@@ -61,25 +171,30 @@
         </div>
     </section>
 
-    <hr class="my-5" />
-
+    <!-- Featured Packages Section -->
     <section>
-        <h2 class="mb-4 text-center text-primary">🍂 Featured Packages</h2>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <div class="subtitle">TRAVEL PACKAGES</div>
+                <h2 class="fw-bold text-primary section-title mb-0">🍂 Featured Packages</h2>
+            </div>
+            <a href="@Url.Action("Index", "Package")" class="btn btn-outline-primary rounded-pill">View All Packages <i class="bi bi-arrow-right"></i></a>
+        </div>
+
         <div class="row g-4">
             @foreach (var package in Model.FeaturedPackages)
             {
                 <div class="col-md-3">
-                    <div class="card h-100 shadow-sm">
-                        <img src="~/@package.image" class="card-img-top" alt="@package.name" style="height: 200px; object-fit: cover;">
+                    <div class="card h-100 border-0 shadow-sm hover-card destination-card">
+                        <div class="position-relative card-img-wrapper">
+                            <img src="~/@package.image" class="card-img-top" alt="@package.name">
+                            <span class="position-absolute top-0 end-0 bg-autumn text-white m-2 px-2 py-1 rounded-pill price-tag">$@package.price</span>
+                        </div>
                         <div class="card-body d-flex flex-column">
-                            <h5 class="card-title text-center">@package.name</h5>
-                            <p class="card-text text-center fw-bold text-success">Price: $@package.price</p>
-                            <p class="card-text">@package.description</p>
-                            @*<div class="mt-auto text-center">
-                                <a href="" class="btn btn-autumn btn-sm">View Details</a>
-                            </div>*@
-                            <div class="mt-auto text-center">
-                                @Html.ActionLink("View Details 🍂", "Details","Package", new { id = package.pkg_id }, new { @class = "btn btn-autumn btn-sm" })
+                            <h5 class="card-title">@package.name</h5>
+                            <p class="card-text text-muted mb-3 small">@(package.description.Length > 100 ? package.description.Substring(0, 100) + "..." : package.description)</p>
+                            <div class="mt-auto d-flex justify-content-between align-items-center">
+                                @Html.ActionLink("View Details", "Details", "Package", new { id = package.pkg_id }, new { @class = "btn btn-sm btn-autumn rounded-pill" })
                             </div>
                         </div>
                     </div>
@@ -87,4 +202,252 @@
             }
         </div>
     </section>
+
+    <!-- Testimonials Section -->
+    <section class="my-5 py-5 bg-light rounded-3 testimonial-section">
+        <div class="text-center mb-5">
+            <div class="subtitle">TESTIMONIALS</div>
+            <h2 class="fw-bold text-primary section-title">What Our Travelers Say</h2>
+            <div class="title-divider"></div>
+            <p class="lead text-muted">Real experiences from our happy travelers</p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner py-4">
+                        <div class="carousel-item active">
+                            <div class="text-center px-4">
+                                <div class="mb-4">
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                </div>
+                                <p class="lead fst-italic">"Our trip to Bali with Wanderlust was absolutely perfect. Everything was well-organized and the local guide was extremely knowledgeable!"</p>
+                                <div class="d-flex justify-content-center">
+                                    <div>
+                                        <h5 class="mb-0">Sarah Johnson</h5>
+                                        <p class="text-muted small">Traveled to Bali</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="text-center px-4">
+                                <div class="mb-4">
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                </div>
+                                <p class="lead fst-italic">"The Swiss Alps package exceeded all my expectations. The accommodations were superb and the scenery was breathtaking!"</p>
+                                <div class="d-flex justify-content-center">
+                                    <div>
+                                        <h5 class="mb-0">Michael Rodriguez</h5>
+                                        <p class="text-muted small">Traveled to Switzerland</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon bg-primary rounded-circle" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon bg-primary rounded-circle" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card border-0 shadow newsletter-card">
+                    <div class="card-body p-5 text-center">
+                        <h3 class="fw-bold mb-3">Get Travel Inspiration & Special Offers</h3>
+                        <p class="mb-4">Sign up for our newsletter and be the first to know about new destinations and exclusive deals!</p>
+                        <div class="row justify-content-center">
+                            <div class="col-md-8">
+                                <form class="d-flex">
+                                    <input type="email" class="form-control me-2 shadow-sm border-0" placeholder="Your email address">
+                                    <button type="submit" class="btn btn-autumn rounded-pill">Subscribe</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>
+
+<style>
+    /* Enhanced styling for better visual appeal */
+    .text-shadow {
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+    }
+
+    .hover-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .hover-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15) !important;
+    }
+
+    .bg-autumn {
+        background-color: #d2691e;
+    }
+
+    .btn-autumn {
+        background-color: #d2691e;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+    .btn-autumn:hover {
+        background-color: #b35a1f;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(210, 105, 30, 0.3);
+    }
+
+    .carousel-caption {
+        bottom: 20%;
+    }
+
+    .search-box-wrapper {
+        margin-top: -50px;
+        position: relative;
+        z-index: 10;
+        margin-bottom: 50px;
+    }
+
+    .search-box {
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        background: #fff;
+    }
+
+    .subtitle {
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 2px;
+        color: #d2691e;
+        margin-bottom: 5px;
+    }
+
+    .section-title {
+        position: relative;
+        margin-bottom: 15px;
+    }
+
+    .title-divider {
+        height: 3px;
+        width: 60px;
+        background-color: #d2691e;
+        margin: 0 auto 20px;
+    }
+
+    .icon-circle {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background-color: #f8f8f8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        transition: all 0.3s ease;
+    }
+
+    .feature-card:hover .icon-circle {
+        background-color: #d2691e;
+    }
+
+    .feature-card:hover .icon-circle i {
+        color: white !important;
+    }
+
+    .card-img-wrapper {
+        height: 200px;
+        overflow: hidden;
+    }
+
+    .card-img-wrapper img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .destination-card:hover .card-img-wrapper img {
+        transform: scale(1.1);
+    }
+
+    .price-tag {
+        font-weight: 600;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .testimonial-section {
+        background-image: linear-gradient(135deg, #fff8f0 0%, #fff 100%);
+    }
+
+    .newsletter-card {
+        border-radius: 15px;
+        background-image: linear-gradient(135deg, #f0f8ff 0%, #eff6ff 100%);
+    }
+
+</style>
+
+@section scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Set minimum date for date inputs to today
+            const today = new Date().toISOString().split('T')[0];
+            const dateInputs = document.querySelectorAll('input[type="date"]');
+            dateInputs.forEach(input => {
+                input.min = today;
+            });
+
+            // Set the second date's minimum to match the first date when changed
+            const startDateInput = document.querySelector('input[name="startDate"]');
+            const endDateInput = document.querySelector('input[name="endDate"]');
+
+            if (startDateInput && endDateInput) {
+                startDateInput.addEventListener('change', function () {
+                    endDateInput.min = startDateInput.value;
+                    if (endDateInput.value && new Date(endDateInput.value) < new Date(startDateInput.value)) {
+                        endDateInput.value = startDateInput.value;
+                    }
+                });
+            }
+
+            // Form validation
+            const searchForm = document.getElementById('searchForm');
+            const destinationSelect = document.getElementById('destinationSelect');
+
+            if (searchForm) {
+                searchForm.addEventListener('submit', function (event) {
+                    if (!destinationSelect.value) {
+                        event.preventDefault();
+                        alert('Please select a destination');
+                        destinationSelect.focus();
+                    }
+                });
+            }
+        });
+    </script>
+}

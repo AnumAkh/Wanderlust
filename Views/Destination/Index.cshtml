@@ -1,30 +1,71 @@
 ﻿@model IEnumerable<Wanderlust.Models.DESTINATION>
-
 @{
-    ViewBag.Title = "Destinations";
+    ViewBag.Title = "Explore Our Destinations";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container my-5">
-    <div id="wishlist-message" class="alert alert-success" style="display: none;"></div>
-    <h2 class="text-center mb-4 " style="color: #ff7f50; ">Destinations</h2>
+<!-- Page Header -->
+<div class="destination-header">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <div class="subtitle">DISCOVER</div>
+                <h1 class="fw-bold page-title">Explore Our Destinations</h1>
+                <div class="title-divider"></div>
+                <p class="lead text-muted">Find your perfect getaway among our carefully selected destinations</p>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <div class="row g-4">
+<div class="container my-5">
+    <!-- Alert Message -->
+    <div id="wishlist-message" class="alert alert-success shadow-sm rounded-pill text-center" style="display: none; max-width: 500px; margin: 0 auto 20px;"></div>
+
+    <!-- Filter Controls -->
+    <div class="mb-4 filter-controls p-3 rounded-3 shadow-sm">
+        <div class="row align-items-center">
+            <div class="col-md-4">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-0"><i class="bi bi-search"></i></span>
+                    <input type="text" id="destination-search" class="form-control border-0" placeholder="Search destinations...">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <select class="form-select border-0" id="sort-destinations">
+                    <option value="default">Sort By: Featured</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="name-asc">Name: A to Z</option>
+                </select>
+            </div>
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                <span class="text-muted"><i class="bi bi-grid-3x3-gap-fill me-1"></i> Showing @Model.Count() destinations</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Destinations Grid -->
+    <div class="row g-4" id="destinations-container">
         @foreach (var item in Model)
         {
-            <div class="col-md-4 col-lg-3">
-                <div class="card h-100 shadow border-0" style="background-color: #fff5f0;">
-                    <img src="~/@item.image" class="card-img-top" alt="@item.destName" style="height: 200px; object-fit: cover; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
-
+            <div class="col-md-4 col-lg-3 destination-item" data-name="@item.destName.ToLower()" data-price="@item.price">
+                <div class="card h-100 border-0 shadow-sm hover-card destination-card">
+                    <div class="position-relative card-img-wrapper">
+                        <img src="~/@item.image" class="card-img-top" alt="@item.destName">
+                        <span class="position-absolute top-0 end-0 bg-autumn text-white m-2 px-2 py-1 rounded-pill price-tag">$@item.price</span>
+                    </div>
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title text-center" style="color: #d2691e;">@item.destName</h5>
-                        <div class="mt-auto d-flex justify-content-between pt-2">
-                            <div>
-                                @Html.ActionLink("View Details 🍂", "Details", new { id = item.dest_id }, new { @class = "btn btn-autumn btn-sm" })
-                            </div>
+                        <h5 class="card-title">@item.destName</h5>
+                        <p class="card-text small text-muted mb-3">
+                            @(item.description != null ? (item.description.Length > 80 ? item.description.Substring(0, 80) + "..." : item.description) : "")
+                        </p>
+                        <div class="mt-auto d-flex justify-content-between align-items-center">
+                            @Html.ActionLink("View Details", "Details", new { id = item.dest_id }, new { @class = "btn btn-sm btn-autumn rounded-pill" })
+
                             @if (Session["UserID"] != null)
                             {
-                                <button type="button" class="btn btn-outline-danger btn-sm add-to-wishlist"
+                                <button type="button" class="btn btn-outline-danger btn-sm rounded-circle add-to-wishlist"
                                         data-id="@item.dest_id"
                                         data-url="@Url.Action("AddToWishlist", "Wishlist", new { id = item.dest_id })"
                                         title="Add to Wishlist">
@@ -37,17 +78,130 @@
             </div>
         }
     </div>
-    @section Scripts {
-        <script>
-  $(document).ready(function () {
-    // Show TempData messages if available
-           @if (TempData["SuccessMessage"] != null)
+
+    <!-- No Results Message -->
+    <div id="no-results" class="text-center py-5 d-none">
+        <div class="mb-3">
+            <i class="bi bi-search fs-1 text-muted"></i>
+        </div>
+        <h4>No destinations found</h4>
+        <p class="text-muted">Try adjusting your search criteria</p>
+    </div>
+</div>
+
+<style>
+    /* Enhanced styles for destination page */
+    .destination-header {
+        background-color: #fff8f0;
+        padding: 60px 0;
+        margin-bottom: 30px;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .subtitle {
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 2px;
+        color: #d2691e;
+        margin-bottom: 5px;
+    }
+
+    .page-title {
+        color: #d2691e;
+        margin-bottom: 15px;
+    }
+
+    .title-divider {
+        height: 3px;
+        width: 60px;
+        background-color: #d2691e;
+        margin: 0 auto 20px;
+    }
+
+    .filter-controls {
+        background-color: #fff8f0;
+        margin-bottom: 30px;
+    }
+
+    .hover-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+        .hover-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15) !important;
+        }
+
+    .card-img-wrapper {
+        height: 180px;
+        overflow: hidden;
+    }
+
+        .card-img-wrapper img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+    .destination-card:hover .card-img-wrapper img {
+        transform: scale(1.1);
+    }
+
+    .price-tag {
+        font-weight: 600;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .btn-autumn {
+        background-color: #d2691e;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+        .btn-autumn:hover {
+            background-color: #b35a1f;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(210, 105, 30, 0.3);
+        }
+
+    .bg-autumn {
+        background-color: #d2691e;
+    }
+
+    .rounded-circle.add-to-wishlist {
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        transition: all 0.3s ease;
+    }
+
+        .rounded-circle.add-to-wishlist:hover {
+            transform: scale(1.1);
+        }
+
+        .rounded-circle.add-to-wishlist.btn-danger:hover {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+</style>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Show TempData messages if available
+            @if (TempData["SuccessMessage"] != null)
             {
                 <text>
                     $('#wishlist-message').text('@TempData["SuccessMessage"]').show().delay(3000).fadeOut();
                 </text>
             }
-
             @if (TempData["InfoMessage"] != null)
             {
                 <text>
@@ -61,13 +215,11 @@
                 var button = $(this);
                 var destinationId = button.data('id');
                 var url = button.data('url');
-
                 $.ajax({
                     url: url,
                     type: 'GET',
                     success: function (response) {
                         $('#wishlist-message').text('Added to Wishlist!').show().delay(3000).fadeOut();
-
                         // Change heart appearance
                         button.html('<i class="bi bi-heart-fill"></i>')
                             .removeClass('btn-outline-danger')
@@ -78,11 +230,62 @@
                             .text('Error adding to wishlist. Please try again.').show().delay(3000).fadeOut();
                     }
                 });
-
                 return false;
             });
 
+            // Search functionality
+            $('#destination-search').on('keyup', function() {
+                var value = $(this).val().toLowerCase();
+                filterDestinations();
+            });
+
+            // Sorting functionality
+            $('#sort-destinations').on('change', function() {
+                sortDestinations($(this).val());
+            });
+
+            function filterDestinations() {
+                var searchValue = $('#destination-search').val().toLowerCase();
+                var visibleCount = 0;
+
+                $('.destination-item').each(function() {
+                    var name = $(this).data('name');
+
+                    if (name.includes(searchValue)) {
+                        $(this).removeClass('d-none');
+                        visibleCount++;
+                    } else {
+                        $(this).addClass('d-none');
+                    }
+                });
+
+                if (visibleCount === 0) {
+                    $('#no-results').removeClass('d-none');
+                } else {
+                    $('#no-results').addClass('d-none');
+                }
+            }
+
+            function sortDestinations(sortBy) {
+                var $container = $('#destinations-container');
+                var $items = $('.destination-item').toArray();
+
+                $items.sort(function(a, b) {
+                    if (sortBy === 'price-low') {
+                        return $(a).data('price') - $(b).data('price');
+                    } else if (sortBy === 'price-high') {
+                        return $(b).data('price') - $(a).data('price');
+                    } else if (sortBy === 'name-asc') {
+                        return $(a).data('name').localeCompare($(b).data('name'));
+                    } else {
+                        return 0; // Default order (as they appear in the model)
+                    }
+                });
+
+                $.each($items, function(i, item) {
+                    $container.append(item);
+                });
+            }
         });
-        </script>
-    }
-</div>
+    </script>
+}
